@@ -14,8 +14,10 @@ const pricingPlans = [
   {
     id: "price_1Qz7rpRpsg73CUGegjYOj3Ag",
     name: "3 Months",
+    nameAr: "3 أشهر",
     price: 299,
     interval: "quarter",
+    intervalAr: "ربع",
     features: [
       "Real-time market analysis",
       "Basic stock recommendations",
@@ -26,8 +28,11 @@ const pricingPlans = [
   {
     id: "price_1Qz7sKRpsg73CUGeas3PqPQL",
     name: "6 Months",
+    nameAr: "6 أشهر",
     price: 499,
     interval: "half-year",
+    intervalAr: "نصف سنة",
+
     popular: true,
     features: [
       "Real-time market analysis",
@@ -39,8 +44,10 @@ const pricingPlans = [
   {
     id: "price_1Qz7r5Rpsg73CUGeCexgf4TN",
     name: "1 Year",
+    nameAr: "1 سنة",
     price: 899,
     interval: "year",
+    intervalAr: "سنة",
     features: [
       "All 6-month features",
       "Personal consultation",
@@ -60,13 +67,6 @@ interface LangProps {
   lang: "en" | "ar";
 }
 
-const commonFeatures = [
-  "Real-time market analysis",
-  "Basic stock recommendations",
-  "Weekly market reports",
-  "Email support",
-];
-
 const translations = {
   en: {
     title: "Choose Your Plan",
@@ -76,6 +76,12 @@ const translations = {
     subscribe: "Subscribe Now",
     processing: "Processing...",
     alreadySubscribed: "Already Subscribed",
+    commonFeatures: [
+      "Real-time market insights",
+      "Pharmaceutical stock picks",
+      "Daily market updates",
+      "WhatsApp alerts",
+    ],
   },
   ar: {
     title: "اختر خطتك",
@@ -85,6 +91,12 @@ const translations = {
     subscribe: "اشترك الآن",
     processing: "...جاري المعالجة",
     alreadySubscribed: "مشترك بالفعل",
+    commonFeatures: [
+      "تحليل السوق في الوقت الفعلي",
+      "توصيات لأسهم شركات الأدوية",
+      "تقارير السوق اليومية",
+      "إشعارات واتساب",
+    ],
   },
 };
 
@@ -200,7 +212,7 @@ export default function PricingSection({ lang }: LangProps) {
             {t.features}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {commonFeatures.map((feature) => (
+            {t.commonFeatures.map((feature) => (
               <div key={feature} className="flex items-center text-white">
                 <Check className="h-5 w-5 text-brightTeal mr-2" />
                 <span>{feature}</span>
@@ -229,11 +241,13 @@ export default function PricingSection({ lang }: LangProps) {
                 )}
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-center">
-                    {plan.name}
+                    {lang === "ar" ? plan.nameAr : plan.name}
                   </CardTitle>
                   <div className="text-center mt-4">
                     <span className="text-4xl font-bold">${plan.price}</span>
-                    <span className="text-gray-600">/{plan.interval}</span>
+                    <span className="text-gray-600">
+                      / {lang === "ar" ? plan.intervalAr : plan.interval}
+                    </span>
                   </div>
                 </CardHeader>
                 <CardContent>

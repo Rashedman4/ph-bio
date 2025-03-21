@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "my-app",
+      name: "pharma-stock",
       script: "npm",
       args: "run start", // The npm script to run
       env: {

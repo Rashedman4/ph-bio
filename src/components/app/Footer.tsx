@@ -41,11 +41,12 @@ const Footer = () => {
       className={`bg-royalBlue text-pureWhite ${
         isArabic ? `dir-rtl text-right ${rubik.className}` : ""
       }`}
+      dir={isArabic ? "rtl" : "ltr"}
     >
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">PharmaStock</h3>
+            <h3 className="text-lg font-semibold mb-4">Bio Pharma Stock</h3>
             <p className="text-sm">
               {isArabic
                 ? "تمكين المستثمرين برؤى متطورة حول أسواق الأدوية."
@@ -78,12 +79,12 @@ const Footer = () => {
             <p className="text-sm mb-2">
               {" "}
               {isArabic
-                ? "info@biopharmastock.com : البريد الإلكتروني "
+                ? " البريد الإلكتروني: info@biopharmastock.com "
                 : "Email: info@biopharmastock.com"}
             </p>
             <p className="text-sm">
               {isArabic
-                ? "info@biopharmastock.com : رقم الهاتف "
+                ? " رقم الهاتف: info@biopharmastock.com"
                 : "Phone: info@biopharmastock.com"}
             </p>
           </div>

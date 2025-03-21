@@ -74,7 +74,7 @@ export const metadata = {
     siteName: "Bio Pharma Stock",
     images: [
       {
-        url: "/public/web-appminfest-512x512.png",
+        url: "/web-appminfest-512x512.png",
         width: 512,
         height: 512,
         alt: "Bio Pharma Stock Logo",
@@ -87,7 +87,7 @@ export const metadata = {
     title: "Bio Pharma Stock | Pharma Market Insights",
     description:
       "Real-time stock signals, news, and updates on the US pharmaceutical sector. Get daily insights and video reports.",
-    images: ["/public/web-appminfest-192x192.png"],
+    images: ["/web-appminfest-192x192.png"],
   },
   icons: {
     icon: "/app/favicon.ico",

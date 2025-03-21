@@ -7,7 +7,7 @@ const rubik = Rubik({
   subsets: ["arabic"], // Include Arabic subset
 });
 export const metadata = {
-  title: "أسهم الأدوية الحيوية | إشارات السوق الدوائي، الأخبار ورؤى الاستثمار",
+  title: "الأسهم الدوائية | Bio Pharma Stock",
   description:
     "ابقَ في الصدارة في سوق الأسهم الدوائية مع إشارات حية، وأخبار شركات التكنولوجيا الحيوية، وتحليلات الخبراء، ورؤى استثمارية يومية. احصل على أحدث الاتجاهات والتوقعات واستراتيجيات التداول.",
   keywords: [
@@ -71,7 +71,7 @@ export const metadata = {
     siteName: "أسهم الأدوية الحيوية",
     images: [
       {
-        url: "/public/web-appminfest-512x512.png",
+        url: "/web-appminfest-512x512.png",
         width: 512,
         height: 512,
         alt: "شعار أسهم الأدوية الحيوية",
@@ -84,7 +84,7 @@ export const metadata = {
     title: "أسهم الأدوية الحيوية | رؤى سوق الأدوية",
     description:
       "إشارات حية للأسهم، وأخبار، وتحديثات عن قطاع الأدوية في الولايات المتحدة. احصل على رؤى يومية وتقارير بالفيديو.",
-    images: ["/public/web-appminfest-192x192.png"],
+    images: ["/web-appminfest-192x192.png"],
   },
   icons: {
     icon: "/app/favicon.ico",
