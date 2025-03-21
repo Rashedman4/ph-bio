@@ -10,6 +10,7 @@ import PolicyModal from "@/components/app/PolicyModal";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
+  metadataBase: new URL("https://biopharmastock.com"),
   title: "Bio Pharma Stock | Pharma Market Signals, News & Investment Insights",
   description:
     "Stay ahead in the pharmaceutical stock market with real-time signals, biotech stock news, expert analysis, and daily investment insights. Get the latest trends, forecasts, and trading strategies.",

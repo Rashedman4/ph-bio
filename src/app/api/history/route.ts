@@ -9,9 +9,12 @@ const CACHE_TIME = 60; // 1 minute
 // Cached function
 const getSignalHistory = unstable_cache(
   async () => {
-    const result = await pool.query(
+    const client = await pool.connect();
+    const result = await client.query(
       "SELECT * FROM signal_history ORDER BY created_at DESC"
     );
+    client.release();
+
     return result.rows;
   },
   [CACHE_KEY],
@@ -21,6 +24,8 @@ const getSignalHistory = unstable_cache(
 // GET handler
 export const GET = async () => {
   try {
+    console.log(process.env.DB_USER);
+    console.log(process.env.DB_HOST);
     const data = await getSignalHistory();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
