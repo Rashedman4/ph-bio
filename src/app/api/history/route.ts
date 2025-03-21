@@ -24,8 +24,6 @@ const getSignalHistory = unstable_cache(
 // GET handler
 export const GET = async () => {
   try {
-    console.log(process.env.DB_USER);
-    console.log(process.env.DB_HOST);
     const data = await getSignalHistory();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
