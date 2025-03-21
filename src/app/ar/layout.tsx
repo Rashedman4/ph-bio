@@ -68,13 +68,12 @@ export const metadata = {
     description:
       "ابقَ في الطليعة في سوق الأسهم الدوائية مع إشارات حية، وأخبار يومية، وتحليلات الخبراء. اشترك للحصول على رؤى معمقة.",
     url: "https://biopharmastock.com/ar",
-    siteName: "أسهم الأدوية الحيوية",
+    siteName: "Bio Pharma Stock",
     images: [
       {
-        url: "/web-appminfest-512x512.png",
         width: 512,
         height: 512,
-        alt: "شعار أسهم الأدوية الحيوية",
+        alt: "Bio Pharma Stock Logo",
       },
     ],
     type: "website",
@@ -84,7 +83,13 @@ export const metadata = {
     title: "أسهم الأدوية الحيوية | رؤى سوق الأدوية",
     description:
       "إشارات حية للأسهم، وأخبار، وتحديثات عن قطاع الأدوية في الولايات المتحدة. احصل على رؤى يومية وتقارير بالفيديو.",
-    images: ["/web-appminfest-192x192.png"],
+    images: [
+      {
+        width: 512,
+        height: 512,
+        alt: "Bio Pharma Stock Logo",
+      },
+    ],
   },
   icons: {
     icon: "/app/favicon.ico",
