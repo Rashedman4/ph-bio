@@ -161,7 +161,7 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => {
+      authorized: () => {
         return true; // Let the middleware handle the authorization
       },
     },
