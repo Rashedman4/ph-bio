@@ -29,7 +29,7 @@ const LANGUAGES = ["en", "ar"];
 const LANGUAGE_COOKIE_NAME = "preferred_language";
 
 const ADMIN_API_ROUTES = ["/api/admin"];
-
+const baseUrl = process.env.NEXTAUTH_URL;
 export default withAuth(
   async function middleware(request: NextRequest) {
     try {
@@ -63,14 +63,13 @@ export default withAuth(
             ? languageCookie.value
             : "ar";
 
-          const baseUrl = request.nextUrl.origin;
           // Redirect to the preferred language
           const preferredLangUrl = new URL(
             `${preferredLanguage}${pathname}`,
             baseUrl // Use origin instead of request.url
           );
 
-          console.log(preferredLangUrl.href + " " + request.url);
+          console.log(preferredLangUrl.href + " " + baseUrl);
           return NextResponse.redirect(preferredLangUrl);
         }
       }
@@ -90,18 +89,16 @@ export default withAuth(
 
       if (isAuthRoute && isAuth) {
         return NextResponse.redirect(
-          new URL("/" + langPrefix + Route.Home, request.url)
+          new URL("/" + langPrefix + Route.Home, baseUrl)
         );
       }
 
       if (!isAuth && isProtected) {
         const lang = langPrefix;
         if (isAdminRoute && (!isAuth || userRole !== "admin")) {
-          return NextResponse.redirect(
-            new URL("/en" + Route.Home, request.url)
-          );
+          return NextResponse.redirect(new URL("/en" + Route.Home, baseUrl));
         }
-        const loginUrl = new URL("/" + lang + Route.SignIn, request.url);
+        const loginUrl = new URL("/" + lang + Route.SignIn, baseUrl);
         loginUrl.searchParams.set(
           "message",
           `${
@@ -115,21 +112,15 @@ export default withAuth(
 
       if (isAuth && isSubscribedRoute && userRole !== "admin") {
         // Check subscription status
-        const response = await fetch(
-          `${request.nextUrl.origin}/api/subscriptions/status`,
-          {
-            headers: {
-              Cookie: request.headers.get("cookie") || "",
-            },
-          }
-        );
+        const response = await fetch(`${baseUrl}/api/subscriptions/status`, {
+          headers: {
+            Cookie: request.headers.get("cookie") || "",
+          },
+        });
         const subscriptionData = await response.json();
 
         if (!subscriptionData.isActive) {
-          const pricingUrl = new URL(
-            "/" + langPrefix + Route.Pricing,
-            request.url
-          );
+          const pricingUrl = new URL("/" + langPrefix + Route.Pricing, baseUrl);
           pricingUrl.searchParams.set(
             "message",
             `${
@@ -156,7 +147,7 @@ export default withAuth(
     } catch (error) {
       console.error("Middleware error:", error);
       // Instead of returning a JSON response, redirect to error page
-      return NextResponse.redirect(new URL("/auth/error", request.url));
+      return NextResponse.redirect(new URL("/auth/error", baseUrl));
     }
   },
   {
