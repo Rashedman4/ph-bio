@@ -29,13 +29,13 @@ const LANGUAGES = ["en", "ar"];
 const LANGUAGE_COOKIE_NAME = "preferred_language";
 
 const ADMIN_API_ROUTES = ["/api/admin"];
-const baseUrl = process.env.NEXTAUTH_URL;
 export default withAuth(
   async function middleware(request: NextRequest) {
+    const baseUrl = request.url;
+
     try {
       const token = await getToken({
         req: request,
-        secret: process.env.NEXTAUTH_SECRET,
       });
 
       const pathname = request.nextUrl.pathname;
@@ -155,10 +155,6 @@ export default withAuth(
       authorized: () => {
         return true; // Let the middleware handle the authorization
       },
-    },
-    pages: {
-      signIn: "/auth/login",
-      error: "/auth/error",
     },
   }
 );
