@@ -56,8 +56,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 1 * 24 * 60 * 60,
   },
   jwt: {
-    //secret:process.env.NEXTAUTH_SECRET,
-    //you can get here the roles
+    secret: process.env.NEXTAUTH_SECRET,
   },
   callbacks: {
     async signIn({ user, account, profile }) {

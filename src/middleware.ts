@@ -33,9 +33,14 @@ const ADMIN_API_ROUTES = ["/api/admin"];
 export default withAuth(
   async function middleware(request: NextRequest) {
     try {
+      const token = await getToken({
+        req: request,
+        secret: process.env.NEXTAUTH_SECRET,
+      });
+
       const pathname = request.nextUrl.pathname;
-      const isAuth = await getToken({ req: request });
-      const userRole = isAuth?.role;
+      const isAuth = !!token;
+      const userRole = token?.role;
 
       // Handle admin API routes
       if (ADMIN_API_ROUTES.some((route) => pathname.startsWith(route))) {
@@ -150,15 +155,19 @@ export default withAuth(
       return NextResponse.next();
     } catch (error) {
       console.error("Middleware error:", error);
-      return NextResponse.json(
-        { error: "Internal Server Error" },
-        { status: 500 }
-      );
+      // Instead of returning a JSON response, redirect to error page
+      return NextResponse.redirect(new URL("/auth/error", request.url));
     }
   },
   {
     callbacks: {
-      authorized: () => true,
+      authorized: ({ token }) => {
+        return true; // Let the middleware handle the authorization
+      },
+    },
+    pages: {
+      signIn: "/auth/login",
+      error: "/auth/error",
     },
   }
 );
