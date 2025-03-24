@@ -22,9 +22,9 @@ export const authOptions: NextAuthOptions = {
           if (!user) {
             throw new Error("No user found with this email");
           }
-          /*  if (user.provider === "google") {
+          if (user.provider === "google") {
             throw new Error("Email rigstered with google");
-          } */
+          }
           const isValid = await bcrypt.compare(
             credentials?.password as string,
             user.password as string
@@ -39,7 +39,7 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
-    /*   GoogleProvider({
+    GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       authorization: {
@@ -49,11 +49,11 @@ export const authOptions: NextAuthOptions = {
           response_type: "code",
         },
       },
-    }) ,*/
+    }),
   ],
   session: {
     strategy: "jwt",
-    maxAge: 1 * 24 * 60 * 60,
+    maxAge: 24 * 60 * 60, // 24 hours
   },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
@@ -119,7 +119,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/login",
     error: "/auth/error",
   },
-  /*  cookies: {
+  cookies: {
     sessionToken: {
       name: `${
         process.env.NODE_ENV === "production" ? "__Secure-" : ""
@@ -129,7 +129,23 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         secure: process.env.NODE_ENV === "production",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".biopharmastock.com"
+            : undefined,
       },
     },
-  }, */
+  },
+  debug: true,
+  logger: {
+    error: (code, metadata) => {
+      console.error(code, metadata);
+    },
+    warn: (code) => {
+      console.warn(code);
+    },
+    debug: (code, metadata) => {
+      console.debug(code, metadata);
+    },
+  },
 };
