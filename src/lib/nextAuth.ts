@@ -119,24 +119,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/login",
     error: "/auth/error",
   },
-  cookies: {
-    sessionToken: {
-      name: `${
-        process.env.NODE_ENV === "production" ? "__Secure-" : ""
-      }next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        domain:
-          process.env.NODE_ENV === "production"
-            ? ".biopharmastock.com"
-            : undefined,
-      },
-    },
-  },
-  debug: true,
+  /*  debug: true,
   logger: {
     error: (code, metadata) => {
       console.error(code, metadata);
@@ -147,5 +130,5 @@ export const authOptions: NextAuthOptions = {
     debug: (code, metadata) => {
       console.debug(code, metadata);
     },
-  },
+  }, */
 };

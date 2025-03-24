@@ -26,6 +26,7 @@ export default function Navbar() {
   const { status } = useSession(); // Access the session data
 
   const toggleLanguage = async () => {
+    if (!pathname) return; // Prevent errors if pathname is null
     const currentLangPrefix = langPrefix === "en" ? "/en" : "/ar";
 
     const newLangPrefix = langPrefix === "en" ? "/ar" : "/en";

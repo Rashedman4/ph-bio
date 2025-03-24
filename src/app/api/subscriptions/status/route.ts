@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/nextAuth";
 
 export async function GET() {
   try {
-    // Get the token and extract user email
-    const session = await getServerSession();
+    // Pass authOptions to getServerSession
+    const session = await getServerSession(authOptions);
 
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return NextResponse.json(
         { error: "Unauthorized - No valid session" },
         { status: 401 }

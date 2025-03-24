@@ -39,6 +39,7 @@ export default function PolicyModal() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!pathname) return; // Prevent errors if pathname is null
     const policyAccepted = Cookies.get("policyAccepted");
     const isPolicyPage = pathname.includes("/policy");
     if (!policyAccepted && !isPolicyPage) {
@@ -51,6 +52,7 @@ export default function PolicyModal() {
     setIsOpen(false);
   };
   const toggleLanguage = async () => {
+    if (!pathname) return; // Prevent errors if pathname is null
     const currentLangPrefix = lang === "en" ? "/en" : "/ar";
     const newLangPrefix = lang === "en" ? "/ar" : "/en";
     const newPath = pathname.replace(currentLangPrefix, newLangPrefix);
