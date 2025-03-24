@@ -36,6 +36,7 @@ export default withAuth(
     try {
       const token = await getToken({
         req: request,
+        secret: process.env.NEXTAUTH_SECRET,
       });
 
       const pathname = request.nextUrl.pathname;
@@ -115,6 +116,7 @@ export default withAuth(
         const response = await fetch(`${baseUrl}/api/subscriptions/status`, {
           headers: {
             Cookie: request.headers.get("cookie") || "",
+            "Cache-Control": "no-cache", // Prevent caching
           },
         });
         const subscriptionData = await response.json();
@@ -161,8 +163,10 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    "/((?!_next|api|static|public|.*\\..*).*)", // Match all routes except those that begin with `_next`, `api`, or serve static files
-    "/api/:path*", // Explicitly include API routes for middleware processing
+    // "/((?!_next|api|static|public|.*\\..*).*)", // Match all routes except those that begin with `_next`, `api`, or serve static files
+    //  "/api/:path*", // Explicitly include API routes for middleware processing
+    "/((?!_next|api/auth|static|public|.*\\..*).*)",
+    "/api/((?!auth).*)*",
     "/admin/:path*",
   ],
 };
