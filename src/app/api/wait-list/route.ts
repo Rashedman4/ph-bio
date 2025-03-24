@@ -1,12 +1,11 @@
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/nextAuth";
+import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
+import { getToken } from "next-auth/jwt";
 
-export async function POST() {
-  const session = await getServerSession(authOptions);
+export async function POST(request: NextRequest) {
+  const token = await getToken({ req: request });
 
-  if (!session) {
+  if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -14,7 +13,7 @@ export async function POST() {
   try {
     // Check if user is already in waitlist
     const checkQuery = "SELECT * FROM waitinglist WHERE user_id = $1";
-    const checkResult = await client.query(checkQuery, [session.user.id]);
+    const checkResult = await client.query(checkQuery, [token.id]);
 
     if (checkResult.rows.length > 0) {
       return NextResponse.json(
@@ -25,7 +24,7 @@ export async function POST() {
 
     // Add to waitlist
     const insertQuery = "INSERT INTO waitinglist (user_id) VALUES ($1)";
-    await client.query(insertQuery, [session.user.id]);
+    await client.query(insertQuery, [token.id]);
 
     return NextResponse.json({ message: "Added to waitlist" }, { status: 201 });
   } catch (error) {
@@ -37,24 +36,17 @@ export async function POST() {
   }
 }
 
-export async function GET() {
-  const session = await getServerSession();
+export async function GET(request: NextRequest) {
+  const token = await getToken({ req: request });
 
-  if (!session) {
-    return new NextResponse("Unauthorized", { status: 401 });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session) {
-    if (session.user) {
-      if (session.user.email) {
-        const authorizedEmails =
-          process.env.AUTHORIZED_EMAILS?.split(",") || [];
-        if (!authorizedEmails.includes(session.user.email)) {
-          return new NextResponse("Unauthorized", { status: 401 });
-        }
-      } else {
-        return new NextResponse("Unauthorized", { status: 401 });
-      }
-    }
+
+  // Check authorized emails
+  const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
+  if (!authorizedEmails.includes(token.email as string)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const client = await pool.connect();

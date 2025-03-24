@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
-import { getServerSession } from "next-auth";
+import { getToken } from "next-auth/jwt";
 
-export async function GET() {
-  const session = await getServerSession();
-  if (!session?.user?.email) {
+export async function GET(request: NextRequest) {
+  const token = await getToken({ req: request });
+  if (!token) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 

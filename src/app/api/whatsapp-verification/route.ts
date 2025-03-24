@@ -1,12 +1,11 @@
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/nextAuth";
+import { NextResponse, NextRequest } from "next/server";
 import pool from "@/lib/db";
+import { getToken } from "next-auth/jwt";
 
-export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
+export async function POST(request: NextRequest) {
+  const token = await getToken({ req: request });
 
-  if (!session) {
+  if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -22,7 +21,7 @@ export async function POST(request: Request) {
         RETURNING pin_code
       `;
       const result = await client.query(query, [
-        session.user.id,
+        token.id,
         phoneNumber,
         pinCode,
       ]);

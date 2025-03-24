@@ -1,14 +1,20 @@
-import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
+import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
-import { authOptions } from "@/lib/nextAuth";
+import { getToken } from "next-auth/jwt";
 
 // POST handler
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const client = await pool.connect();
   try {
-    const session = await getServerSession(authOptions);
-    if (!session || session.user.role !== "admin") {
+    const token = await getToken({ req });
+
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Check authorized emails
+    const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
+    if (!authorizedEmails.includes(token.email as string)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

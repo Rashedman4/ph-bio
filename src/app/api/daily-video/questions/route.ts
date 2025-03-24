@@ -10,7 +10,6 @@ export async function POST(request: NextRequest) {
   }
 
   const { content } = await request.json();
-  console.log(content, token);
   const client = await pool.connect();
   try {
     const query = "INSERT INTO questions (user_id, content) VALUES ($1, $2)";

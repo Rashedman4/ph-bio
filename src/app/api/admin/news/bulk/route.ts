@@ -1,17 +1,17 @@
 import pool from "@/lib/db";
-import { getServerSession } from "next-auth";
+import { getToken } from "next-auth/jwt";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession();
-
-  if (!session?.user?.email) {
-    return new NextResponse("Unauthorized", { status: 401 });
+  const token = await getToken({ req });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Check authorized emails
   const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
-  if (!authorizedEmails.includes(session.user.email)) {
-    return new NextResponse("Unauthorized", { status: 401 });
+  if (!authorizedEmails.includes(token.email as string)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {

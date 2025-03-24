@@ -1,25 +1,18 @@
 import pool from "@/lib/db";
-import { getServerSession } from "next-auth";
 import { NextResponse, NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession();
+  const token = await getToken({ req });
 
-  if (!session) {
-    return new NextResponse("Unauthorized", { status: 401 });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session) {
-    if (session.user) {
-      if (session.user.email) {
-        const authorizedEmails =
-          process.env.AUTHORIZED_EMAILS?.split(",") || [];
-        if (!authorizedEmails.includes(session.user.email)) {
-          return new NextResponse("Unauthorized", { status: 401 });
-        }
-      } else {
-        return new NextResponse("Unauthorized", { status: 401 });
-      }
-    }
+
+  // Check authorized emails
+  const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
+  if (!authorizedEmails.includes(token.email as string)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -50,23 +43,16 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const session = await getServerSession();
+  const token = await getToken({ req });
 
-  if (!session) {
-    return new NextResponse("Unauthorized", { status: 401 });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session) {
-    if (session.user) {
-      if (session.user.email) {
-        const authorizedEmails =
-          process.env.AUTHORIZED_EMAILS?.split(",") || [];
-        if (!authorizedEmails.includes(session.user.email)) {
-          return new NextResponse("Unauthorized", { status: 401 });
-        }
-      } else {
-        return new NextResponse("Unauthorized", { status: 401 });
-      }
-    }
+
+  // Check authorized emails
+  const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
+  if (!authorizedEmails.includes(token.email as string)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {

@@ -1,14 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/nextAuth";
+import { getToken } from "next-auth/jwt";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     // Pass authOptions to getServerSession
-    const session = await getServerSession(authOptions);
+    const token = await getToken({ req: request });
 
-    if (!session?.user?.email) {
+    if (!token) {
       return NextResponse.json(
         { error: "Unauthorized - No valid session" },
         { status: 401 }
@@ -25,7 +24,7 @@ export async function GET() {
          AND end_date > NOW()
          ORDER BY created_at DESC 
          LIMIT 1`,
-        [session.user.email]
+        [token.email]
       );
 
       return NextResponse.json({

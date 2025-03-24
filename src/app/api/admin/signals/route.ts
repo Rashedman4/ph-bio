@@ -1,7 +1,7 @@
 import pool from "@/lib/db";
-import { getServerSession } from "next-auth";
 import { NextResponse, NextRequest } from "next/server";
 import { revalidatePath } from "next/cache";
+import { getToken } from "next-auth/jwt";
 
 // Function to fetch current price (replace with your actual API call)
 async function fetchCurrentPrice(symbol: string) {
@@ -19,23 +19,16 @@ async function fetchCurrentPrice(symbol: string) {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession();
+  const token = await getToken({ req });
 
-  if (!session) {
-    return new NextResponse("Unauthorized", { status: 401 });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session) {
-    if (session.user) {
-      if (session.user.email) {
-        const authorizedEmails =
-          process.env.AUTHORIZED_EMAILS?.split(",") || [];
-        if (!authorizedEmails.includes(session.user.email)) {
-          return new NextResponse("Unauthorized", { status: 401 });
-        }
-      } else {
-        return new NextResponse("Unauthorized", { status: 401 });
-      }
-    }
+
+  // Check authorized emails
+  const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
+  if (!authorizedEmails.includes(token.email as string)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -86,23 +79,16 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const session = await getServerSession();
+  const token = await getToken({ req });
 
-  if (!session) {
-    return new NextResponse("Unauthorized", { status: 401 });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session) {
-    if (session.user) {
-      if (session.user.email) {
-        const authorizedEmails =
-          process.env.AUTHORIZED_EMAILS?.split(",") || [];
-        if (!authorizedEmails.includes(session.user.email)) {
-          return new NextResponse("Unauthorized", { status: 401 });
-        }
-      } else {
-        return new NextResponse("Unauthorized", { status: 401 });
-      }
-    }
+
+  // Check authorized emails
+  const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
+  if (!authorizedEmails.includes(token.email as string)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -146,23 +132,16 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const session = await getServerSession();
+  const token = await getToken({ req });
 
-  if (!session) {
-    return new NextResponse("Unauthorized", { status: 401 });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session) {
-    if (session.user) {
-      if (session.user.email) {
-        const authorizedEmails =
-          process.env.AUTHORIZED_EMAILS?.split(",") || [];
-        if (!authorizedEmails.includes(session.user.email)) {
-          return new NextResponse("Unauthorized", { status: 401 });
-        }
-      } else {
-        return new NextResponse("Unauthorized", { status: 401 });
-      }
-    }
+
+  // Check authorized emails
+  const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
+  if (!authorizedEmails.includes(token.email as string)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -207,16 +186,16 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-export async function GET() {
-  const session = await getServerSession();
+export async function GET(request: NextRequest) {
+  const token = await getToken({ req: request });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   //const isAdmin = session?.user?.email === "rashed111222@yahoo.com";
-  const email = session?.user?.email;
+  const email = token?.email;
   const authorizedEmails = process.env.AUTHORIZED_EMAILS?.split(",") || [];
   const isAdmin = authorizedEmails.includes(email || "");
-
-  if (!session) {
-    return new NextResponse("Unauthorized", { status: 401 });
-  }
 
   try {
     const client = await pool.connect();

@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import Stripe from "stripe";
 import pool from "@/lib/db";
-import { getServerSession } from "next-auth";
+import { getToken } from "next-auth/jwt";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -9,12 +9,18 @@ interface PaymentRequest {
   productType: "3_months" | "6_months" | "1_year";
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     // Get the token and extract user email
-    const session = await getServerSession();
+    const token = await getToken({ req });
 
-    if (!session?.user.email) {
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized - No valid session" },
+        { status: 401 }
+      );
+    }
+    if (!token.email) {
       return NextResponse.json(
         { error: "Unauthorized - No valid session" },
         { status: 401 }
@@ -22,7 +28,7 @@ export async function POST(req: Request) {
     }
 
     const { productType } = (await req.json()) as PaymentRequest;
-    const userEmail = session.user.email;
+    const userEmail = token.email;
 
     const client = await pool.connect();
     try {
