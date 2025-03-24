@@ -22,9 +22,9 @@ export const authOptions: NextAuthOptions = {
           if (!user) {
             throw new Error("No user found with this email");
           }
-          if (user.provider === "google") {
+          /*  if (user.provider === "google") {
             throw new Error("Email rigstered with google");
-          }
+          } */
           const isValid = await bcrypt.compare(
             credentials?.password as string,
             user.password as string
@@ -39,7 +39,7 @@ export const authOptions: NextAuthOptions = {
         }
       },
     }),
-    GoogleProvider({
+    /*   GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       authorization: {
@@ -49,7 +49,7 @@ export const authOptions: NextAuthOptions = {
           response_type: "code",
         },
       },
-    }),
+    }) ,*/
   ],
   session: {
     strategy: "jwt",
