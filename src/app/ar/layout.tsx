@@ -71,8 +71,9 @@ export const metadata = {
     siteName: "Bio Pharma Stock",
     images: [
       {
-        width: 512,
-        height: 512,
+        url: "https://biopharmastock.com/opengraph-image.png", // Absolute URL
+        width: 1200,
+        height: 630,
         alt: "Bio Pharma Stock Logo",
       },
     ],
@@ -85,8 +86,9 @@ export const metadata = {
       "إشارات حية للأسهم، وأخبار، وتحديثات عن قطاع الأدوية في الولايات المتحدة. احصل على رؤى يومية وتقارير بالفيديو.",
     images: [
       {
-        width: 512,
-        height: 512,
+        url: "https://biopharmastock.com/twitter-image.png", // Absolute URL
+        width: 1200,
+        height: 630,
         alt: "Bio Pharma Stock Logo",
       },
     ],
