@@ -92,7 +92,7 @@ export const metadata = {
       {
         url: "https://biopharmastock.com/twitter-image.png", // Absolute URL
         width: 1200,
-        height: 630,
+        height: 600,
         alt: "Bio Pharma Stock Logo",
       },
     ],
