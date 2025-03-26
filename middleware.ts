@@ -165,7 +165,7 @@ export const config = {
   matcher: [
     // "/((?!_next|api|static|public|.*\\..*).*)", // Match all routes except those that begin with `_next`, `api`, or serve static files
     //  "/api/:path*", // Explicitly include API routes for middleware processing
-    "/((?!_next|api/auth|static|public|.*\\..*).*)",
+    "/((?!_next|api/auth|static|webmail|public|.*\\..*).*)",
     "/api/((?!auth).*)*",
     "/admin/:path*",
   ],
