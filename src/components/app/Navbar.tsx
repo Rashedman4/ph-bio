@@ -30,6 +30,7 @@ export default function Navbar() {
     const currentLangPrefix = langPrefix === "en" ? "/en" : "/ar";
 
     const newLangPrefix = langPrefix === "en" ? "/ar" : "/en";
+    setIsOpen(false);
     const newPath = pathname.replace(currentLangPrefix, newLangPrefix);
 
     // Update cookie via API
@@ -44,8 +45,10 @@ export default function Navbar() {
   const handleAuth = async () => {
     if (status === "authenticated") {
       await signOut();
+      setIsOpen(false);
       router.push("/" + langPrefix + "/auth/login");
     } else {
+      setIsOpen(false);
       router.push("/" + langPrefix + "/auth/login");
     }
   };

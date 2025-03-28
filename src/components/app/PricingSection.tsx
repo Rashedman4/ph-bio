@@ -62,7 +62,10 @@ if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
 }
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+/* const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!, {
+  locale: "en", // or 'ar' based on your needs
+}); */
+
 interface LangProps {
   lang: "en" | "ar";
 }
@@ -101,6 +104,9 @@ const translations = {
 };
 
 export default function PricingSection({ lang }: LangProps) {
+  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!, {
+    locale: lang,
+  });
   const { status } = useSession(); // Access the session data
   const [loading, setLoading] = useState<string | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
