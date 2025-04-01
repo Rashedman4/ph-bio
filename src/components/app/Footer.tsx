@@ -52,6 +52,11 @@ const Footer = () => {
                 ? "تمكين المستثمرين برؤى متطورة حول أسواق الأدوية."
                 : "Empowering investors with cutting-edge insights into pharmaceutical markets."}
             </p>
+            <p className="text-sm mt-2">
+              {isArabic
+                ? "النجم العالي لتصميم الانظمة ذ.م.م، الإمارات العربية المتحدة، أبو ظبي"
+                : "ALNJAM ALAALI SOFTWARE DESIGN CO. L.L.C, UAE, Abu Dhabi"}
+            </p>
           </div>
           <div>
             <h4 className="text-md font-semibold mb-4">
@@ -82,13 +87,13 @@ const Footer = () => {
                 ? " البريد الإلكتروني: info@biopharmastock.com "
                 : "Email: info@biopharmastock.com"}
             </p>
-            <p className="text-sm">
+            {/*   <p className="text-sm">
               {isArabic
                 ? " رقم الهاتف: info@biopharmastock.com"
                 : "Phone: info@biopharmastock.com"}
-            </p>
+            </p> */}
           </div>
-          <div>
+          {/*  <div>
             <h4 className="text-md font-semibold mb-4">
               {" "}
               {isArabic ? "تابعنا" : "Follow US"}
@@ -127,7 +132,7 @@ const Footer = () => {
                 <span className="sr-only">Instagram</span>
               </Button>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="mt-8 pt-4 border-t border-pureWhite/20 text-center text-sm">
           <p>
