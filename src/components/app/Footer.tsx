@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-import { Button } from "@/components/ui/button";
+//import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+//import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { Rubik } from "next/font/google";
 
