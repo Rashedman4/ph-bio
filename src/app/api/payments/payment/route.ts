@@ -6,7 +6,7 @@ import { getToken } from "next-auth/jwt";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 interface PaymentRequest {
-  productType: "3_months" | "6_months" | "1_year";
+  productType: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -50,8 +50,8 @@ export async function POST(req: NextRequest) {
       }
 
       // Check existing subscription
-      const {
-        rows: [subscription],
+      /* const {
+        rows: [existingSubscription],
       } = await client.query(
         `SELECT id, status 
          FROM subscriptions 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
          LIMIT 1`,
         [userEmail]
       );
-      console.log(subscription);
+ */
       // Create or retrieve customer
       const customer = await stripe.customers.list({
         email: userEmail,
@@ -73,35 +73,37 @@ export async function POST(req: NextRequest) {
         customerId = newCustomer.id;
       }
 
-      // Determine trial eligibility
-      /*    const isEligibleForTrial =
-        !subscription || subscription.status !== "active"; */
-
-      // Create payment intent instead of checkout session
-      const paymentIntent = await stripe.paymentIntents.create({
+      // Create a subscription instead of a payment intent
+      const stripeSubscription = await stripe.subscriptions.create({
         customer: customerId,
-        setup_future_usage: "off_session",
-        amount: package_.amount,
-        currency: "usd",
-        automatic_payment_methods: {
-          enabled: true,
+        items: [{ price: package_.stripe_price_id }],
+        payment_behavior: "default_incomplete",
+        payment_settings: {
+          payment_method_types: ["card"],
+          save_default_payment_method: "on_subscription",
         },
+        expand: ["latest_invoice.payment_intent"],
         metadata: {
           productType,
           userEmail,
         },
       });
 
+      // Get the client secret from the subscription's invoice
+      const invoice = stripeSubscription.latest_invoice as Stripe.Invoice;
+      const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
+
       return NextResponse.json({
         clientSecret: paymentIntent.client_secret,
+        subscriptionId: stripeSubscription.id,
       });
     } finally {
       client.release();
     }
   } catch (error) {
-    console.error("Payment error:", error);
+    console.error("Subscription error:", error);
     return NextResponse.json(
-      { error: "Payment processing failed" },
+      { error: "Subscription processing failed" },
       { status: 500 }
     );
   }

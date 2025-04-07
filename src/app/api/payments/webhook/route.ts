@@ -28,9 +28,21 @@ export async function POST(request: NextRequest) {
     const client = await pool.connect();
     try {
       switch (event.type) {
-        case "payment_intent.succeeded": {
-          const paymentIntent = event.data.object as Stripe.PaymentIntent;
-          const { productType, userEmail } = paymentIntent.metadata;
+        case "customer.subscription.created": {
+          const subscription = event.data.object as Stripe.Subscription;
+          const customerId = subscription.customer as string;
+          const customer = await stripe.customers.retrieve(customerId);
+          const customerEmail = (customer as Stripe.Customer).email;
+
+          if (!customerEmail) {
+            throw new Error("Customer email not found");
+          }
+
+          // Get the price ID from the subscription
+          const priceId = subscription.items.data[0]?.price.id;
+          if (!priceId) {
+            throw new Error("Price ID not found in subscription");
+          }
 
           // Get package details
           const {
@@ -39,11 +51,11 @@ export async function POST(request: NextRequest) {
             `SELECT id, interval, interval_count 
              FROM packages 
              WHERE stripe_price_id = $1`,
-            [productType]
+            [priceId]
           );
 
           if (!package_) {
-            throw new Error(`Package not found for type: ${productType}`);
+            throw new Error(`Package not found for price ID: ${priceId}`);
           }
 
           // Calculate end date based on package interval
@@ -51,109 +63,265 @@ export async function POST(request: NextRequest) {
           endDate.setMonth(endDate.getMonth() + package_.interval_count);
 
           // Create subscription record
-          await client.query(
+          const subscriptionResult = await client.query(
             `INSERT INTO subscriptions (
               user_id,
               package_id,
               status,
               start_date,
               end_date,
-              stripe_payment_intent_id
+              stripe_subscription_id,
+              stripe_customer_id,
+              current_period_start,
+              current_period_end
             ) VALUES (
               (SELECT id FROM users WHERE email = $1),
               $2,
-              'active',
-              NOW(),
               $3,
-              $4
-            )`,
-            [userEmail, package_.id, endDate, paymentIntent.id]
-          );
-          break;
-        }
-
-        /*  case "customer.subscription.created": {
-          const subscription = event.data.object as Stripe.Subscription;
-          const customerId = subscription.customer as string;
-          const customer = await stripe.customers.retrieve(customerId);
-          const customerEmail = (customer as Stripe.Customer).email;
-          if (!customerEmail) {
-            throw new Error("Customer email not found");
-          }
-
-          const trialEnd = subscription.trial_end
-            ? new Date(subscription.trial_end * 1000)
-            : null;
-
-          const endDate = new Date();
-          const intervalCount =
-            subscription.items.data[0]?.price?.recurring?.interval_count || 1;
-          endDate.setMonth(endDate.getMonth() + intervalCount);
-
-          await client.query(
-            `INSERT INTO subscriptions (
-              user_id, 
-              stripe_subscription_id, 
-              package_id,
-              status,
-              start_date,
-              end_date,
-              trial_end
-            ) VALUES (
-              (SELECT id FROM users WHERE email = $1),
-              $2,
-              (SELECT id FROM packages WHERE stripe_price_id = $3),
-              $4,
               NOW(),
+              $4,
               $5,
-              $6
-            )`,
+              $6,
+              to_timestamp($7),
+              to_timestamp($8)
+            ) RETURNING id`,
             [
               customerEmail,
-              subscription.id,
-              subscription.items.data[0]?.price.id,
+              package_.id,
               subscription.status,
               endDate,
-              trialEnd,
+              subscription.id,
+              customerId,
+              subscription.current_period_start,
+              subscription.current_period_end,
             ]
           );
+
+          const subscriptionId = subscriptionResult.rows[0].id;
+
+          // Record the initial transaction if there's an invoice
+          if (subscription.latest_invoice) {
+            const invoice = await stripe.invoices.retrieve(
+              subscription.latest_invoice as string
+            );
+            if (invoice.payment_intent) {
+              await client.query(
+                `INSERT INTO transactions (
+                  user_id,
+                  subscription_id,
+                  stripe_invoice_id,
+                  stripe_payment_intent_id,
+                  amount,
+                  currency,
+                  status,
+                  payment_method,
+                  metadata
+                ) VALUES (
+                  (SELECT id FROM users WHERE email = $1),
+                  $2,
+                  $3,
+                  $4,
+                  $5,
+                  $6,
+                  $7,
+                  $8,
+                  $9
+                )`,
+                [
+                  customerEmail,
+                  subscriptionId,
+                  invoice.id,
+                  invoice.payment_intent,
+                  invoice.amount_paid,
+                  invoice.currency,
+                  invoice.status,
+                  "card",
+                  JSON.stringify(invoice),
+                ]
+              );
+            }
+          }
           break;
         }
- */
-        case "checkout.session.completed":
-          const checkoutSession = event.data.object as Stripe.Checkout.Session;
-          const subscriptionId = checkoutSession.subscription as string;
 
-          if (subscriptionId) {
-            const subscription = await stripe.subscriptions.retrieve(
-              subscriptionId
-            );
-            // Update the subscription data when checkout session is completed
+        case "customer.subscription.updated": {
+          const subscription = event.data.object as Stripe.Subscription;
+          //  const customerId = subscription.customer as string;
+
+          // Update subscription status
+          await client.query(
+            `UPDATE subscriptions 
+             SET status = $1, 
+                 end_date = $2,
+                 current_period_start = to_timestamp($3),
+                 current_period_end = to_timestamp($4),
+                 cancel_at_period_end = $5
+             WHERE stripe_subscription_id = $6`,
+            [
+              subscription.status,
+              new Date(subscription.current_period_end * 1000),
+              subscription.current_period_start,
+              subscription.current_period_end,
+              subscription.cancel_at_period_end,
+              subscription.id,
+            ]
+          );
+
+          // If subscription was canceled, record the canceled_at date
+          if (subscription.canceled_at) {
             await client.query(
-              "UPDATE subscriptions SET stripe_subscription_id = $1, status = 'active', current_period_start = to_timestamp($2), current_period_end = to_timestamp($3) WHERE stripe_customer_id = $4",
-              [
-                subscription.id,
-                subscription.current_period_start,
-                subscription.current_period_end,
-                checkoutSession.customer,
-              ]
+              `UPDATE subscriptions 
+               SET canceled_at = to_timestamp($1)
+               WHERE stripe_subscription_id = $2`,
+              [subscription.canceled_at, subscription.id]
             );
           }
           break;
+        }
 
-        case "customer.subscription.updated":
-        case "customer.subscription.deleted":
-          const updatedSubscription = event.data.object;
+        case "customer.subscription.deleted": {
+          const subscription = event.data.object as Stripe.Subscription;
+
+          // Mark subscription as canceled and set ended_at
           await client.query(
-            "UPDATE subscriptions SET status = $1, current_period_start = to_timestamp($2), current_period_end = to_timestamp($3) WHERE stripe_subscription_id = $4",
-            [
-              updatedSubscription.status,
-              updatedSubscription.current_period_start,
-              updatedSubscription.current_period_end,
-              updatedSubscription.id,
-            ]
+            `UPDATE subscriptions 
+             SET status = 'canceled',
+                 ended_at = NOW()
+             WHERE stripe_subscription_id = $1`,
+            [subscription.id]
           );
           break;
+        }
+
+        case "invoice.paid": {
+          const invoice = event.data.object as Stripe.Invoice;
+          const stripeSubscriptionId = invoice.subscription as string;
+
+          if (stripeSubscriptionId) {
+            // Get our database subscription ID first
+            const { rows: subscriptionRows } = await client.query(
+              `SELECT id, user_id FROM subscriptions WHERE stripe_subscription_id = $1`,
+              [stripeSubscriptionId]
+            );
+
+            if (subscriptionRows.length > 0) {
+              const { id: subscriptionId, user_id: userId } =
+                subscriptionRows[0];
+
+              // Update subscription status to active
+              await client.query(
+                `UPDATE subscriptions 
+                 SET status = 'active'
+                 WHERE id = $1`,
+                [subscriptionId]
+              );
+
+              // Record the transaction
+              if (invoice.payment_intent) {
+                await client.query(
+                  `INSERT INTO transactions (
+                    user_id,
+                    subscription_id,
+                    stripe_invoice_id,
+                    stripe_payment_intent_id,
+                    amount,
+                    currency,
+                    status,
+                    payment_method,
+                    metadata
+                  ) VALUES (
+                    $1,
+                    $2,
+                    $3,
+                    $4,
+                    $5,
+                    $6,
+                    $7,
+                    $8,
+                    $9
+                  )`,
+                  [
+                    userId,
+                    subscriptionId,
+                    invoice.id,
+                    invoice.payment_intent,
+                    invoice.amount_paid,
+                    invoice.currency,
+                    invoice.status,
+                    "card",
+                    JSON.stringify(invoice),
+                  ]
+                );
+              }
+            }
+          }
+          break;
+        }
+
+        case "invoice.payment_failed": {
+          const invoice = event.data.object as Stripe.Invoice;
+          const stripeSubscriptionId = invoice.subscription as string;
+
+          if (stripeSubscriptionId) {
+            // Get our database subscription ID first
+            const { rows: subscriptionRows } = await client.query(
+              `SELECT id, user_id FROM subscriptions WHERE stripe_subscription_id = $1`,
+              [stripeSubscriptionId]
+            );
+
+            if (subscriptionRows.length > 0) {
+              const { id: subscriptionId, user_id: userId } =
+                subscriptionRows[0];
+
+              // Update subscription status to past_due
+              await client.query(
+                `UPDATE subscriptions 
+                 SET status = 'past_due'
+                 WHERE id = $1`,
+                [subscriptionId]
+              );
+
+              // Record the failed transaction
+              if (invoice.payment_intent) {
+                await client.query(
+                  `INSERT INTO transactions (
+                    user_id,
+                    subscription_id,
+                    stripe_invoice_id,
+                    stripe_payment_intent_id,
+                    amount,
+                    currency,
+                    status,
+                    payment_method,
+                    metadata
+                  ) VALUES (
+                    $1,
+                    $2,
+                    $3,
+                    $4,
+                    $5,
+                    $6,
+                    $7,
+                    $8,
+                    $9
+                  )`,
+                  [
+                    userId,
+                    subscriptionId,
+                    invoice.id,
+                    invoice.payment_intent,
+                    invoice.amount_due,
+                    invoice.currency,
+                    "failed",
+                    "card",
+                    JSON.stringify(invoice),
+                  ]
+                );
+              }
+            }
+          }
+          break;
+        }
 
         default:
           console.log(`Unhandled event type: ${event.type}`);

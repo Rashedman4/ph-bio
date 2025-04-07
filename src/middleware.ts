@@ -96,6 +96,7 @@ export default withAuth(
 
       if (!isAuth && isProtected) {
         const lang = langPrefix;
+
         if (isAdminRoute && (!isAuth || userRole !== "admin")) {
           return NextResponse.redirect(new URL("/en" + Route.Home, baseUrl));
         }
@@ -113,25 +114,59 @@ export default withAuth(
 
       if (isAuth && isSubscribedRoute && userRole !== "admin") {
         // Check subscription status
-        const response = await fetch(`${baseUrl}/api/subscriptions/status`, {
-          headers: {
-            Cookie: request.headers.get("cookie") || "",
-            "Cache-Control": "no-cache", // Prevent caching
-          },
-        });
-        const subscriptionData = await response.json();
-
-        if (!subscriptionData.isActive) {
-          const pricingUrl = new URL("/" + langPrefix + Route.Pricing, baseUrl);
-          pricingUrl.searchParams.set(
-            "message",
-            `${
-              langPrefix === "ar"
-                ? "يرجى الاشتراك للوصول إلى هذه الصفحة"
-                : "Please subscribe to access this page"
-            }`
+        try {
+          const response = await fetch(
+            new URL("/api/subscriptions/status", request.url),
+            {
+              headers: {
+                Cookie: request.headers.get("cookie") || "",
+                "Cache-Control": "no-cache",
+              },
+            }
           );
-          return NextResponse.redirect(pricingUrl);
+
+          // Check if the response is OK before trying to parse JSON
+          if (!response.ok) {
+            console.error(
+              `Subscription status check failed: ${response.status}`
+            );
+            // If we can't verify subscription, redirect to pricing
+            const pricingUrl = new URL(
+              "/" + langPrefix + Route.Pricing,
+              baseUrl
+            );
+            pricingUrl.searchParams.set(
+              "message",
+              `${
+                langPrefix === "ar"
+                  ? "يرجى الاشتراك للوصول إلى هذه الصفحة"
+                  : "Please subscribe to access this page"
+              }`
+            );
+            return NextResponse.redirect(pricingUrl);
+          }
+
+          const subscriptionData = await response.json();
+
+          if (!subscriptionData.isActive) {
+            const pricingUrl = new URL(
+              "/" + langPrefix + Route.Pricing,
+              baseUrl
+            );
+            pricingUrl.searchParams.set(
+              "message",
+              `${
+                langPrefix === "ar"
+                  ? "يرجى الاشتراك للوصول إلى هذه الصفحة"
+                  : "Please subscribe to access this page"
+              }`
+            );
+            return NextResponse.redirect(pricingUrl);
+          }
+        } catch (error) {
+          console.error("Error checking subscription status:", error);
+          // If there's an error checking subscription, allow access to avoid blocking users
+          return NextResponse.next();
         }
       }
 
@@ -163,7 +198,7 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    // "/((?!_next|api|static|public|webmail|.*\\..*).*)", // Match all routes except those that begin with `_next`, `api`, or serve static files
+    // "/((?!_next|api|static|public|.*\\..*).*)", // Match all routes except those that begin with `_next`, `api`, or serve static files
     //  "/api/:path*", // Explicitly include API routes for middleware processing
     "/((?!_next|api/auth|static|webmail|public|.*\\..*).*)",
     "/api/((?!auth).*)*",

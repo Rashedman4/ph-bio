@@ -49,7 +49,31 @@ export default function SuccessComp({ lang }: LangProps) {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    setAmount(searchParams.get("amount") || "");
+    const subscriptionId = searchParams.get("subscription_id");
+    const amountParam = searchParams.get("amount");
+
+    if (subscriptionId) {
+      // If we have a subscription ID, fetch the subscription details using POST
+      fetch(`/api/subscriptions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ subscriptionId }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.amount) {
+            setAmount((data.amount / 100).toFixed(2)); // Convert cents to dollars
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching subscription details:", error);
+        });
+    } else if (amountParam) {
+      // If we have an amount parameter, use it directly
+      setAmount(amountParam);
+    }
   }, []);
 
   const handleSubmitPhone = async () => {

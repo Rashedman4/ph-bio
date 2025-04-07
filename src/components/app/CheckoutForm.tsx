@@ -13,13 +13,15 @@ interface CheckoutFormProps {
   amount: number;
   onClose: () => void;
   lang: "en" | "ar";
+  subscriptionId?: string;
 }
 
 export default function CheckoutForm({
-  //clientSecret,
+  // clientSecret,
   amount,
   onClose,
   lang,
+  subscriptionId,
 }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
@@ -41,15 +43,30 @@ export default function CheckoutForm({
       return;
     }
 
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/${lang}/success?amount=${amount}`,
-      },
-    });
+    // If we have a subscriptionId, we're confirming a subscription
+    if (subscriptionId) {
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/${lang}/success?subscription_id=${subscriptionId}`,
+        },
+      });
 
-    if (error) {
-      setErrorMessage(error.message);
+      if (error) {
+        setErrorMessage(error.message);
+      }
+    } else {
+      // Fallback to regular payment confirmation
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/${lang}/success?amount=${amount}`,
+        },
+      });
+
+      if (error) {
+        setErrorMessage(error.message);
+      }
     }
 
     setLoading(false);

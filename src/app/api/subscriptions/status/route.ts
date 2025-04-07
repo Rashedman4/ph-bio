@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const client = await pool.connect();
     try {
       const { rows } = await client.query(
-        `SELECT status, end_date 
+        `SELECT status, end_date, cancel_at_period_end 
          FROM subscriptions 
          WHERE user_id = (SELECT id FROM users WHERE email = $1)
          AND status = 'active'
@@ -30,6 +30,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         isActive: rows.length > 0,
         endDate: rows[0]?.end_date || null,
+        cancelAtPeriodEnd: rows[0]?.cancel_at_period_end || false,
       });
     } finally {
       client.release();

@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     sendEmail(
       email,
       "Your Verification Code",
-      `Thank you for signing up with US Stock Hub. Please use the verification code below to complete your registration:
+      `Thank you for signing up with Bio Pharma Stock. Please use the verification code below to complete your registration:
 
       Verification Code: ${verificationCode}`
     );

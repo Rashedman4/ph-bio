@@ -44,7 +44,7 @@ const Footer = () => {
       dir={isArabic ? "rtl" : "ltr"}
     >
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-4">Bio Pharma Stock</h3>
             <p className="text-sm">
