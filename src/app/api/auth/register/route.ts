@@ -44,13 +44,7 @@ export async function POST(req: NextRequest) {
       phoneNumber.length != 0 ? phoneNumber : null,
     ]);
 
-    sendEmail(
-      email,
-      "Your Verification Code",
-      `Thank you for signing up with Bio Pharma Stock. Please use the verification code below to complete your registration:
-
-      Verification Code: ${verificationCode}`
-    );
+    sendEmail(email, "Verification Code", verificationCode);
     client.release();
     return NextResponse.json(
       {

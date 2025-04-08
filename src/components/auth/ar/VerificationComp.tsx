@@ -96,7 +96,13 @@ function VerificationForm() {
           تحقق من بريدك الإلكتروني
         </CardTitle>
         <CardDescription className="text-center">
-          لقد أرسلنا رمز تحقق مكون من 6 أحرف إلى {email}. يرجى إدخاله أدناه.
+          لقد أرسلنا رمز تحقق مكون من 6 أحرف إلى {email}.<br />
+          يرجى إدخاله أدناه.
+          <br />
+          <span className="text-sm text-gray-500">
+            (يرجى التحقق من مجلد الرسائل غير المرغوب فيها (spam) في حال لم تصلك
+            الرسالة.)
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent>

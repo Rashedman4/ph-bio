@@ -95,7 +95,7 @@ export default function RegisterComp() {
       if (res.ok) {
         // Redirect to the verification page and pass the email as a query parameter
         setSuccess(true);
-        router.push(`/ar/auth/register/verification?email=${formData.email}`);
+        router.push(`/ar/auth/verify?email=${formData.email}`);
       } else {
         const data = await res.json();
         setError(data.message || "حدث خطأ ما.");

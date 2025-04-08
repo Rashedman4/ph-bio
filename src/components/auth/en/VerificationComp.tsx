@@ -88,8 +88,11 @@ function VerificationForm() {
           Verify Your Email
         </CardTitle>
         <CardDescription className="text-center">
-          We have sent a 6-letter verification code to your {email}. Please
-          enter it below.
+          We have sent a 6-letter verification code to your {email}.<br />
+          Please enter it below. <br />
+          <span className="text-sm text-gray-500">
+            (Check your spam or junk folder if you don’t see the email.)
+          </span>
         </CardDescription>
       </CardHeader>
       <CardContent>

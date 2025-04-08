@@ -65,13 +65,19 @@ export default withAuth(
             : "ar";
 
           // Redirect to the preferred language
-          const preferredLangUrl = new URL(
-            `${preferredLanguage}${pathname}`,
-            baseUrl // Use origin instead of request.url
-          );
+          const normalizedPath = pathname.startsWith("/")
+            ? pathname
+            : `/${pathname}`;
 
-          console.log(preferredLangUrl.href + " " + baseUrl);
-          return NextResponse.redirect(preferredLangUrl);
+          const newPath = `/${preferredLanguage}${normalizedPath}`;
+
+          // Prevent double-prefixing by checking if it already starts with /ar or /en
+          if (
+            !newPath.startsWith(`/${preferredLanguage}/${preferredLanguage}`)
+          ) {
+            const preferredLangUrl = new URL(newPath, request.nextUrl.origin);
+            return NextResponse.redirect(preferredLangUrl);
+          }
         }
       }
 

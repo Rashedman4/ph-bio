@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { NextRequest, NextResponse } from "next/server";
-import { sendEmail } from "@/lib/emailService";
+import { sendEmail } from "@/lib/emailServiceOld";
 import pool from "@/lib/db";
 
 export async function POST(req: NextRequest) {
