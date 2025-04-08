@@ -65,19 +65,13 @@ export default withAuth(
             : "ar";
 
           // Redirect to the preferred language
-          const normalizedPath = pathname.startsWith("/")
-            ? pathname
-            : `/${pathname}`;
+          const preferredLangUrl = new URL(
+            `${preferredLanguage}${pathname}`,
+            baseUrl // Use origin instead of request.url
+          );
 
-          const newPath = `/${preferredLanguage}${normalizedPath}`;
-
-          // Prevent double-prefixing by checking if it already starts with /ar or /en
-          if (
-            !newPath.startsWith(`/${preferredLanguage}/${preferredLanguage}`)
-          ) {
-            const preferredLangUrl = new URL(newPath, request.nextUrl.origin);
-            return NextResponse.redirect(preferredLangUrl);
-          }
+          console.log(preferredLangUrl.href + " " + baseUrl);
+          return NextResponse.redirect(preferredLangUrl);
         }
       }
 
@@ -93,6 +87,18 @@ export default withAuth(
           pathname.startsWith("/" + langPrefix + route) ||
           pathname.startsWith(route)
       );
+
+      // Check for auth route loops - if the path contains multiple language prefixes
+      const pathSegments = pathname.split("/");
+      const languagePrefixCount = pathSegments.filter((segment) =>
+        LANGUAGES.includes(segment)
+      ).length;
+      if (languagePrefixCount > 1) {
+        // Redirect to the home page with the correct language prefix
+        return NextResponse.redirect(
+          new URL("/" + langPrefix + Route.Home, baseUrl)
+        );
+      }
 
       if (isAuthRoute && isAuth) {
         return NextResponse.redirect(
