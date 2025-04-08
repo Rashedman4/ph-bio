@@ -16,7 +16,7 @@ const pricingPlans = [
     id: "price_1RBLSCRpsg73CUGeQ4Fw4Ufx",
     name: "1 Day",
     nameAr: "1 أسبوع",
-    price: 9.99,
+    price: 2.0,
     interval: "Daily",
     intervalAr: "أسبوع",
   },
