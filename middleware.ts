@@ -54,6 +54,24 @@ export default withAuth(
       // Extract the language from the URL (assumes the language comes first in the path)
       const langPrefix = pathname.split("/")[1];
 
+      // Check for malformed URLs with repeated segments
+      if (
+        pathname.includes("/auth/ar/auth") ||
+        pathname.includes("/auth/en/auth")
+      ) {
+        // Redirect to the home page with the correct language prefix
+        return NextResponse.redirect(
+          new URL("/" + langPrefix + Route.Home, baseUrl)
+        );
+      }
+
+      // Handle direct access to /ar/auth or /en/auth (which are 404 pages)
+      if (pathname === "/ar/auth" || pathname === "/en/auth") {
+        return NextResponse.redirect(
+          new URL("/" + langPrefix + Route.SignIn, baseUrl)
+        );
+      }
+
       // Check if the path starts with a supported language
       if (!pathname.startsWith("/api") && !pathname.startsWith("/admin")) {
         if (!LANGUAGES.includes(langPrefix)) {
@@ -100,6 +118,17 @@ export default withAuth(
         );
       }
 
+      /*    // Check for auth route loops - if the path contains multiple auth segments
+      const authSegmentCount = pathSegments.filter(
+        (segment) => segment === "auth"
+      ).length;
+      if (authSegmentCount > 1) {
+        // Redirect to the home page with the correct language prefix
+        return NextResponse.redirect(
+          new URL("/" + langPrefix + Route.Home, baseUrl)
+        );
+      }
+ */
       if (isAuthRoute && isAuth) {
         return NextResponse.redirect(
           new URL("/" + langPrefix + Route.Home, baseUrl)
@@ -112,6 +141,12 @@ export default withAuth(
         if (isAdminRoute && (!isAuth || userRole !== "admin")) {
           return NextResponse.redirect(new URL("/en" + Route.Home, baseUrl));
         }
+
+        /*  // Check if we're already on a login page to prevent loops
+        if (pathname.includes("/auth/login")) {
+          return NextResponse.next();
+        } */
+
         const loginUrl = new URL("/" + lang + Route.SignIn, baseUrl);
         loginUrl.searchParams.set(
           "message",
@@ -195,8 +230,11 @@ export default withAuth(
       return NextResponse.next();
     } catch (error) {
       console.error("Middleware error:", error);
-      // Instead of returning a JSON response, redirect to error page
-      return NextResponse.redirect(new URL("/auth/error", baseUrl));
+      // Instead of redirecting to error page, redirect to login page with the correct language
+      const langPrefix = request.nextUrl.pathname.split("/")[1] || "ar";
+      return NextResponse.redirect(
+        new URL("/" + langPrefix + Route.SignIn, baseUrl)
+      );
     }
   },
   {
