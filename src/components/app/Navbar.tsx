@@ -131,7 +131,7 @@ export default function Navbar() {
                   className="text-pureWhite hover:bg-brightTeal hover:text-royalBlue"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  Logout
+                  {langPrefix == "en" ? "Logout" : "تسجيل الخروج"}
                 </Button>
               ) : (
                 <Button
@@ -141,7 +141,7 @@ export default function Navbar() {
                   className="text-pureWhite hover:bg-brightTeal hover:text-royalBlue"
                 >
                   <UserCircle className="mr-2 h-4 w-4" />
-                  Login
+                  {langPrefix == "en" ? "Login" : "تسجيل الدخول"}
                 </Button>
               )}
               <Button

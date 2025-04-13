@@ -27,9 +27,9 @@ const translations = {
     aiPredictions: "AI-powered predictions",
   },
   ar: {
-    title: "استثمر بذكاء في أسهم الأدوية",
+    title: "استثمر بذكاء في الأسهم الدوائية",
     description:
-      "افتح إمكانيات الأسواق الصيدلانية مع رؤانا المتقدمة وتحليلات الخبراء.",
+      "استكشف إمكانيات الأسهم الدوائية مع رؤانا المتقدمة وتحليلات الخبراء.",
     getStarted: "ابدأ الآن",
     learnMore: "اعرف المزيد",
     advantages: "مزايا PharmaStock",
