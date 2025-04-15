@@ -115,6 +115,32 @@ export default function RootLayout({
 
   return (
     <html lang={lang} className="light">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Bio Pharma Stock",
+              url: "https://biopharmastock.com",
+              logo: "https://biopharmastock.com/web-app-manifest-192x192.png",
+              /* sameAs: [
+                "https://twitter.com/yourhandle", // Optional: Twitter
+                "https://www.linkedin.com/company/yourcompany", // Optional: LinkedIn
+                "https://www.facebook.com/yourpage", // Optional: Facebook
+              ], */
+              /* contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "+1-800-123-4567", // Optional: real or placeholder
+                contactType: "Customer Support",
+                areaServed: "US",
+                availableLanguage: ["English", "Arabic"],
+              }, */
+            }),
+          }}
+        />
+      </head>
       <body
         className={`${inter.className} dark:bg-gray-900 dark:text-white flex flex-col min-h-screen`}
       >
