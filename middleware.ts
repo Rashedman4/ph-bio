@@ -31,8 +31,9 @@ const LANGUAGE_COOKIE_NAME = "preferred_language";
 const ADMIN_API_ROUTES = ["/api/admin"];
 export default withAuth(
   async function middleware(request: NextRequest) {
-    const baseUrl = request.url;
-
+    const protocol = request.headers.get("x-forwarded-proto") || "https";
+    const host = request.headers.get("host");
+    const baseUrl = `${protocol}://${host}`;
     try {
       const token = await getToken({
         req: request,
@@ -163,7 +164,7 @@ export default withAuth(
         // Check subscription status
         try {
           const response = await fetch(
-            new URL("/api/subscriptions/status", request.url),
+            new URL("/api/subscriptions/status", baseUrl),
             {
               headers: {
                 Cookie: request.headers.get("cookie") || "",
