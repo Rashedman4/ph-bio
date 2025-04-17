@@ -4,7 +4,7 @@ import { motion, useInView } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, ArrowRight, Dna, Pill, Microscope } from "lucide-react";
+import { Lightbulb, Dna, Pill, Microscope } from "lucide-react";
 import { useState, useRef, ReactNode } from "react";
 interface SectionHeaderProps {
   title: string;

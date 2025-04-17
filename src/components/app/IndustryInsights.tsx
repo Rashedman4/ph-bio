@@ -269,7 +269,7 @@ function InsightItem({ insight, index }: InsightItemProps) {
   );
 }
 
-function ButtonAnimation({ children }: { children: ReactNode }) {
+/* function ButtonAnimation({ children }: { children: ReactNode }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -285,3 +285,4 @@ function ButtonAnimation({ children }: { children: ReactNode }) {
     </motion.div>
   );
 }
+ */
