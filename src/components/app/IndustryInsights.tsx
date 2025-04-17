@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -13,7 +13,22 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Lightbulb, TrendingUp, BarChart3 } from "lucide-react";
+import { ReactNode, useRef } from "react";
 
+interface ChartAnimationProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+interface InsightItemProps {
+  insight: InsightData;
+  index: number;
+}
+interface SectionHeaderProps {
+  title: string;
+  icon: React.ReactNode;
+  description: string;
+}
 interface InsightData {
   title: string;
   description: string;
@@ -60,23 +75,14 @@ export default function IndustryInsights() {
   return (
     <section className="py-16 bg-gradient-to-br from-royalBlue/5 via-royalBlue/2 to-brightTeal/5">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl font-bold text-royalBlue mb-2 flex items-center justify-center">
-            <Lightbulb className="mr-2 text-brightTeal" /> Industry Insights
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            In-depth data and trends shaping the future of pharmaceuticals —
-            from AI-driven R&D to biosimilar disruption.
-          </p>
-        </motion.div>
+        <SectionHeader
+          title="Industry Insights"
+          icon={<Lightbulb className="mr-2 text-brightTeal" />}
+          description="Leverage our expert analysis of pharmaceutical industry trends to make informed investment decisions."
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          <div className="lg:col-span-2">
+          <ChartAnimation className="lg:col-span-2">
             <Card className="shadow-lg h-full">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-royalBlue mb-4 flex items-center">
@@ -126,8 +132,7 @@ export default function IndustryInsights() {
                 </p>
               </CardContent>
             </Card>
-          </div>
-
+          </ChartAnimation>
           <div>
             <Card className="shadow-lg h-full">
               <CardContent className="p-6">
@@ -137,48 +142,7 @@ export default function IndustryInsights() {
                 </h3>
                 <div className="space-y-6">
                   {insights.map((insight, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="pb-4 border-b border-gray-200 last:border-0"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="font-semibold text-gray-800">
-                          {insight.title}
-                        </h4>
-                        <Badge
-                          className={
-                            insight.impact === "positive"
-                              ? "bg-green-100 text-green-800"
-                              : insight.impact === "negative"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-blue-100 text-blue-800"
-                          }
-                        >
-                          {insight.impact === "positive"
-                            ? "Bullish"
-                            : insight.impact === "negative"
-                            ? "Bearish"
-                            : "Neutral"}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-2">
-                        {insight.description}
-                      </p>
-                      <div className="flex flex-wrap gap-1">
-                        {insight.sectors.map((sector) => (
-                          <Badge
-                            key={sector}
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {sector}
-                          </Badge>
-                        ))}
-                      </div>
-                    </motion.div>
+                    <InsightItem key={index} insight={insight} index={index} />
                   ))}
                 </div>
               </CardContent>
@@ -196,5 +160,128 @@ export default function IndustryInsights() {
         </motion.p>
       </div>
     </section>
+  );
+}
+// Add these components at the end of the file, before the closing }
+function SectionHeader({ title, icon, description }: SectionHeaderProps) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="text-center mb-12"
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{ duration: 0.7 }}
+    >
+      <motion.h2
+        className="text-3xl font-bold text-royalBlue mb-2 flex items-center justify-center"
+        initial={{ scale: 0.9 }}
+        animate={isInView ? { scale: 1 } : { scale: 0.9 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        {icon} {title}
+      </motion.h2>
+      <motion.div
+        initial={{ width: 0 }}
+        animate={isInView ? { width: "100px" } : { width: 0 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="h-1 bg-brightTeal mx-auto mb-4"
+      />
+      <motion.p
+        className="text-gray-600 max-w-2xl mx-auto"
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        {description}
+      </motion.p>
+    </motion.div>
+  );
+}
+
+function ChartAnimation({ children, className }: ChartAnimationProps) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={{ opacity: 0, x: -50 }}
+      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
+      transition={{ duration: 0.7 }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function InsightItem({ insight, index }: InsightItemProps) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, x: 50 }}
+      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="pb-4 border-b border-gray-200 last:border-0"
+    >
+      <div className="flex justify-between items-start mb-2">
+        <h4 className="font-semibold text-gray-800">{insight.title}</h4>
+        <Badge
+          className={
+            insight.impact === "positive"
+              ? "bg-green-100 text-green-800"
+              : insight.impact === "negative"
+              ? "bg-red-100 text-red-800"
+              : "bg-blue-100 text-blue-800"
+          }
+        >
+          {insight.impact === "positive"
+            ? "Bullish"
+            : insight.impact === "negative"
+            ? "Bearish"
+            : "Neutral"}
+        </Badge>
+      </div>
+      <p className="text-sm text-gray-600 mb-2">{insight.description}</p>
+      <div className="flex flex-wrap gap-1">
+        {insight.sectors.map((sector, idx) => (
+          <motion.div
+            key={sector}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={
+              isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
+            }
+            transition={{ duration: 0.3, delay: 0.3 + idx * 0.1 }}
+          >
+            <Badge variant="outline" className="text-xs">
+              {sector}
+            </Badge>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+function ButtonAnimation({ children }: { children: ReactNode }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="text-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ duration: 0.5 }}
+    >
+      {children}
+    </motion.div>
   );
 }
