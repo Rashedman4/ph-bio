@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   LineChart,
   Line,
@@ -13,7 +12,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Lightbulb, TrendingUp, BarChart3, ArrowRight } from "lucide-react";
+import { Lightbulb, TrendingUp, BarChart3 } from "lucide-react";
 
 interface InsightData {
   title: string;

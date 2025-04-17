@@ -72,8 +72,8 @@ export default function GlobalPharmaMap() {
             <Globe className="mr-2" /> Global Pharmaceutical Landscape
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            Discover investment opportunities across the world's pharmaceutical
-            markets and track regional growth trends.
+            Discover investment opportunities across the world&apos;s
+            pharmaceutical markets and track regional growth trends.
           </p>
         </motion.div>
 
