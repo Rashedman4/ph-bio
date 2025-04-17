@@ -81,38 +81,40 @@ export default function WhyUs({ lang }: LangProps) {
   const t = translations[lang] || translations.en;
 
   return (
-    <section className="mb-12">
-      <h2 className="text-2xl font-bold text-royalBlue mb-4">{t.title}</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {t.reasons.map((reason, index) => (
-          <motion.div
-            key={reason.title}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.3 }}
-          >
-            <Card className="hover:shadow-lg transition-shadow duration-300 h-full">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-brightTeal flex items-center">
-                  <reason.icon
-                    className={`${lang === "ar" ? "ml-2" : "mr-2"} h-5 w-5 `}
+    <section className="mb-12 py-16 bg-gradient-to-br from-royalBlue/10 to-brightTeal/10 ">
+      <div className="container mx-auto px-4">
+        <h2 className="text-2xl font-bold text-royalBlue mb-4">{t.title}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {t.reasons.map((reason, index) => (
+            <motion.div
+              key={reason.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.3 }}
+            >
+              <Card className="hover:shadow-lg transition-shadow duration-300 h-full bg-white">
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-brightTeal flex items-center">
+                    <reason.icon
+                      className={`${lang === "ar" ? "ml-2" : "mr-2"} h-5 w-5 `}
+                    />
+                    {reason.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600">{reason.description}</p>
+                  <motion.div
+                    className="mt-4 h-1 bg-brightTeal"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: "100%" }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
                   />
-                  {reason.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600">{reason.description}</p>
-                <motion.div
-                  className="mt-4 h-1 bg-brightTeal"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: "100%" }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                />
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
