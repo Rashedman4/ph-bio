@@ -13,7 +13,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Lightbulb, TrendingUp, BarChart3 } from "lucide-react";
-import { ReactNode, useRef } from "react";
+import { useRef } from "react";
 
 interface ChartAnimationProps {
   children: React.ReactNode;
