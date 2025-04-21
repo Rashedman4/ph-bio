@@ -12,7 +12,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Lightbulb, TrendingUp, BarChart3 } from "lucide-react";
+import { Lightbulb, TrendingUp, BarChart3, ArrowUpLeft } from "lucide-react";
 import { useRef } from "react";
 
 interface ChartAnimationProps {
@@ -35,30 +35,57 @@ interface InsightData {
   impact: "positive" | "negative" | "neutral";
   sectors: string[];
 }
-
-const insights: InsightData[] = [
-  {
-    title: "AI in Drug Discovery Gains Ground",
-    description:
-      "Top pharma firms have increased investment in AI by 40% YoY, accelerating early-stage drug screening and lowering R&D costs across oncology and neurology.",
-    impact: "positive",
-    sectors: ["AI", "Biotech", "Pharma R&D"],
-  },
-  {
-    title: "Biosimilars Disrupt Patent-Expired Blockbusters",
-    description:
-      "With Humira’s patent expired, biosimilars are projected to save $180B in drug spending globally by 2028, putting pressure on branded revenue streams.",
-    impact: "negative",
-    sectors: ["Generics", "Biologics", "Healthcare Cost"],
-  },
-  {
-    title: "Precision Medicine Becomes Mainstream",
-    description:
-      "Over 50% of new FDA approvals in 2023 were tied to targeted or biomarker-driven therapies, reflecting a shift toward individualized treatment plans.",
-    impact: "positive",
-    sectors: ["Genomics", "Diagnostics", "Oncology"],
-  },
-];
+interface langProps {
+  lang: "en" | "ar";
+}
+const insightsTranslation: Record<"en" | "ar", InsightData[]> = {
+  en: [
+    {
+      title: "AI in Drug Discovery Gains Ground",
+      description:
+        "Top pharma firms have increased investment in AI by 40% YoY, accelerating early-stage drug screening and lowering R&D costs across oncology and neurology.",
+      impact: "positive",
+      sectors: ["AI", "Biotech", "Pharma R&D"],
+    },
+    {
+      title: "Biosimilars Disrupt Patent-Expired Blockbusters",
+      description:
+        "With Humira’s patent expired, biosimilars are projected to save $180B in drug spending globally by 2028, putting pressure on branded revenue streams.",
+      impact: "negative",
+      sectors: ["Generics", "Biologics", "Healthcare Cost"],
+    },
+    {
+      title: "Precision Medicine Becomes Mainstream",
+      description:
+        "Over 50% of new FDA approvals in 2023 were tied to targeted or biomarker-driven therapies, reflecting a shift toward individualized treatment plans.",
+      impact: "positive",
+      sectors: ["Genomics", "Diagnostics", "Oncology"],
+    },
+  ],
+  ar: [
+    {
+      title: "الذكاء الاصطناعي يغير اكتشاف الأدوية",
+      description:
+        "زادت شركات الأدوية الاستثمار في الذكاء الاصطناعي بنسبة ٤٠٪ سنويًا، مما يسرّع من فحص الأدوية المبكر ويقلل التكاليف في مجالات مثل الأورام والأعصاب.",
+      impact: "positive",
+      sectors: ["الذكاء الاصطناعي", "التكنولوجيا الحيوية", "البحث والتطوير"],
+    },
+    {
+      title: "الأدوية المشابهة تؤثر على الأدوية الأصلية",
+      description:
+        "بعد انتهاء براءة اختراع دواء هيوميرا، من المتوقع أن توفر البدائل الحيوية ١٨٠ مليار دولار في تكاليف الأدوية بحلول عام ٢٠٢٨، مما يضغط على إيرادات الأدوية الأصلية.",
+      impact: "negative",
+      sectors: ["الأدوية المشابهة", "البيولوجيا", "تكاليف الرعاية الصحية"],
+    },
+    {
+      title: "الطب الدقيق يصبح السائد",
+      description:
+        "أكثر من ٥٠٪ من الموافقات الجديدة من FDA في عام ٢٠٢٣ كانت لعلاجات موجهة أو تعتمد على مؤشرات حيوية، مما يعكس تحولًا نحو خطط علاج فردية.",
+      impact: "positive",
+      sectors: ["الجينوم", "التشخيص", "علم الأورام"],
+    },
+  ],
+};
 
 const marketTrendData = [
   { year: "2018", traditional: 100, precision: 40, digital: 20 },
@@ -71,14 +98,24 @@ const marketTrendData = [
   { year: "2025", traditional: 120, precision: 280, digital: 310 },
 ];
 
-export default function IndustryInsights() {
+export default function IndustryInsights({ lang }: langProps) {
+  const insights = insightsTranslation[lang];
   return (
     <section className="py-16 bg-gradient-to-br from-royalBlue/5 via-royalBlue/2 to-brightTeal/5">
       <div className="container mx-auto px-4">
         <SectionHeader
-          title="Industry Insights"
-          icon={<Lightbulb className="mr-2 text-brightTeal" />}
-          description="Leverage our expert analysis of pharmaceutical industry trends to make informed investment decisions."
+          title={lang === "ar" ? "رؤى الصناعة" : "Industry Insights"}
+          icon={
+            <Lightbulb
+              className={`${lang == "en" ? "mr-2" : "ml-2"} text-brightTeal`}
+            />
+          }
+          description={
+            lang === "ar"
+              ? "استفد من تحليلنا المتخصص لاتجاهات صناعة الأدوية لاتخاذ قرارات استثمارية ذكية."
+              : "Leverage our expert analysis of pharmaceutical industry trends to make informed investment decisions."
+          }
+          lang={lang}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
@@ -86,9 +123,18 @@ export default function IndustryInsights() {
             <Card className="shadow-lg h-full">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-royalBlue mb-4 flex items-center">
-                  <TrendingUp className="mr-2 h-5 w-5 text-brightTeal" />
-                  Pharmaceutical Market Segmentation Growth
+                  {lang == "en" && (
+                    <TrendingUp className="mr-2 h-5 w-5 text-brightTeal" />
+                  )}
+                  {lang === "ar"
+                    ? "نمو تقسيمات سوق الأدوية"
+                    : "Pharmaceutical Market Segmentation Growth"}
+
+                  {lang == "ar" && (
+                    <ArrowUpLeft className="ml-2 h-5 w-5 text-brightTeal" />
+                  )}
                 </h3>
+
                 <div className="h-[350px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart
@@ -126,9 +172,10 @@ export default function IndustryInsights() {
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-                <p className="text-sm text-gray-600 mt-4">
-                  Indexed growth (2018 = 100) shows precision and digital
-                  therapies scaling faster than legacy pharma pipelines.
+                <p className="text-sm text-gray-600 mt-4 text-center">
+                  {lang === "ar"
+                    ? "يعرض النمو المفهرس (2018 = 100) أن العلاجات الرقمية والدقيقة تنمو بشكل أسرع من خطوط إنتاج الأدوية التقليدية."
+                    : "Indexed growth (2018 = 100) shows precision and digital therapies scaling faster than legacy pharma pipelines."}
                 </p>
               </CardContent>
             </Card>
@@ -137,12 +184,22 @@ export default function IndustryInsights() {
             <Card className="shadow-lg h-full">
               <CardContent className="p-6">
                 <h3 className="text-xl font-bold text-royalBlue mb-4 flex items-center">
-                  <BarChart3 className="mr-2 h-5 w-5 text-brightTeal" /> Key
-                  Trends
+                  {lang == "en" && (
+                    <BarChart3 className="mr-2 h-5 w-5 text-brightTeal" />
+                  )}
+                  {lang === "ar" ? "الاتجاهات الرئيسية" : "Key Trends"}
+                  {lang == "ar" && (
+                    <BarChart3 className="mr-2 h-5 w-5 text-brightTeal" />
+                  )}
                 </h3>
                 <div className="space-y-6">
-                  {insights.map((insight, index) => (
-                    <InsightItem key={index} insight={insight} index={index} />
+                  {insights?.map((insight, index) => (
+                    <InsightItem
+                      key={index}
+                      insight={insight}
+                      index={index}
+                      lang={lang}
+                    />
                   ))}
                 </div>
               </CardContent>
@@ -156,14 +213,21 @@ export default function IndustryInsights() {
           transition={{ delay: 0.3 }}
           className="text-center text-xs text-gray-500 mt-8"
         >
-          *Data based on industry research and updated in April 2025.
+          {lang === "ar"
+            ? "*البيانات مستندة إلى أبحاث الصناعة ومحدثة في أبريل 2025."
+            : "*Data based on industry research and updated in April 2025."}
         </motion.p>
       </div>
     </section>
   );
 }
 // Add these components at the end of the file, before the closing }
-function SectionHeader({ title, icon, description }: SectionHeaderProps) {
+function SectionHeader({
+  title,
+  icon,
+  description,
+  lang,
+}: langProps & SectionHeaderProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -181,7 +245,7 @@ function SectionHeader({ title, icon, description }: SectionHeaderProps) {
         animate={isInView ? { scale: 1 } : { scale: 0.9 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        {icon} {title}
+        {lang == "ar" && `${title}`} {icon} {lang == "en" && `${title}`}
       </motion.h2>
       <motion.div
         initial={{ width: 0 }}
@@ -218,7 +282,7 @@ function ChartAnimation({ children, className }: ChartAnimationProps) {
   );
 }
 
-function InsightItem({ insight, index }: InsightItemProps) {
+function InsightItem({ insight, index, lang }: langProps & InsightItemProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -241,7 +305,13 @@ function InsightItem({ insight, index }: InsightItemProps) {
               : "bg-blue-100 text-blue-800"
           }
         >
-          {insight.impact === "positive"
+          {lang === "ar"
+            ? insight.impact === "positive"
+              ? "صعودي"
+              : insight.impact === "negative"
+              ? "هبوطي"
+              : "محايد"
+            : insight.impact === "positive"
             ? "Bullish"
             : insight.impact === "negative"
             ? "Bearish"

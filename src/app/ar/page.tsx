@@ -2,6 +2,9 @@ import Hero from "@/components/app/Hero";
 import TopStocksSlider from "@/components/app/TopStocksSlider";
 import WhyPharmaSector from "@/components/app/WhyPharmaSector";
 import WhyUs from "@/components/app/WhyUs";
+import BreakthroughSpotlight from "@/components/app/BreakthroughSpotlight";
+import IndustryInsights from "@/components/app/IndustryInsights";
+import GlobalPharmaMap from "@/components/app/GlobalPharmaMap";
 export const metadata = {
   title: "أفضل أسهم الأدوية وتحليلات السوق | مصدرك الموثوق",
   description:
@@ -13,13 +16,15 @@ export default function Home() {
     <main className="min-h-screen bg-pureWhite rtl">
       <Hero lang="ar" />
       <TopStocksSlider lang="ar" />
-      <div className="  py-8">
+      <div className="  py-8 ">
         <WhyPharmaSector lang="ar" />
-      </div>
-
-      <div className="container mx-auto px-4 py-8" id="whyUs">
+        <BreakthroughSpotlight lang="ar" />
+        <IndustryInsights lang="ar" />
+        <GlobalPharmaMap lang="ar" />
         <WhyUs lang="ar" />
       </div>
+
+      <div className="container mx-auto py-8 " id="whyUs"></div>
     </main>
   );
 }

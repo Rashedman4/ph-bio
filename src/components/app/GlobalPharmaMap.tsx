@@ -5,6 +5,56 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Globe, TrendingUp, TrendingDown } from "lucide-react";
 import { useState, useRef } from "react";
+
+const translations = {
+  en: {
+    title: "Global Pharmaceutical Landscape",
+    description:
+      "Discover investment opportunities across the world's pharmaceutical markets and track regional growth trends.",
+    regions: {
+      "north-america": "North America",
+      europe: "Europe",
+      "asia-pacific": "Asia-Pacific",
+      "emerging-markets": "Emerging Markets",
+    },
+    labels: {
+      growth: "Growth",
+      topSectors: "TOP SECTORS",
+      trackedCompanies: "TRACKED COMPANIES",
+      investmentOpportunity: "INVESTMENT OPPORTUNITY",
+      clickRegion: "Click on a region to view detailed information",
+      opportunityLevels: {
+        low: "Low",
+        medium: "Medium",
+        high: "High",
+      },
+    },
+  },
+  ar: {
+    title: "المشهد الصيدلاني العالمي",
+    description:
+      "اكتشف فرص الاستثمار في أسواق الأدوية العالمية وتتبع اتجاهات النمو الإقليمية.",
+    regions: {
+      "north-america": "أمريكا الشمالية",
+      europe: "أوروبا",
+      "asia-pacific": "آسيا والمحيط الهادئ",
+      "emerging-markets": "الأسواق الناشئة",
+    },
+    labels: {
+      growth: "النمو",
+      topSectors: "القطاعات الرئيسية",
+      trackedCompanies: "الشركات المتتبعة",
+      investmentOpportunity: "فرصة الاستثمار",
+      clickRegion: "انقر على منطقة لعرض معلومات مفصلة",
+      opportunityLevels: {
+        low: "منخفض",
+        medium: "متوسط",
+        high: "مرتفع",
+      },
+    },
+  },
+};
+
 interface RegionDetailCardProps {
   region: RegionData;
 }
@@ -32,59 +82,107 @@ interface RegionData {
   description: string;
 }
 
-const regions: RegionData[] = [
-  {
-    id: "north-america",
-    name: "North America",
-    growth: 6.15, // CAGR 2024–2033
-    companies: 2325, // Number of brand name pharmaceutical manufacturers in the U.S. as of 2023
-    topSectors: ["Oncology", "Neurology", "Biologics"],
-    description:
-      "The U.S. leads the global pharmaceutical market, accounting for approximately 30–40% of global sales, with a strong focus on oncology and biologics.",
-  },
-  {
-    id: "europe",
-    name: "Europe",
-    growth: 5.7, // CAGR 2024–2033
-    companies: 1800, // Estimated number of pharmaceutical companies in Europe
-    topSectors: ["Oncology", "Cardiovascular", "Vaccines"],
-    description:
-      "Europe maintains a robust pharmaceutical industry with significant contributions in oncology, cardiovascular treatments, and vaccine development.",
-  },
-  {
-    id: "asia-pacific",
-    name: "Asia-Pacific",
-    growth: 11.4, // CAGR 2024–2030
-    companies: 3100, // Estimated number of pharmaceutical companies in Asia-Pacific
-    topSectors: ["Generics", "Biosimilars", "Traditional Medicine"],
-    description:
-      "Asia-Pacific is the fastest-growing pharmaceutical market, driven by generics, biosimilars, and traditional medicine, with significant contributions from countries like India and China.",
-  },
-  {
-    id: "emerging-markets",
-    name: "Emerging Markets",
-    growth: 9.8, // Estimated CAGR
-    companies: 1420, // Estimated number of pharmaceutical companies in emerging markets
-    topSectors: ["Infectious Diseases", "Affordable Medicine", "Telehealth"],
-    description:
-      "Emerging markets are rapidly developing pharmaceutical infrastructures focusing on accessible healthcare, infectious disease treatment, and telehealth solutions.",
-  },
-];
+const translatedRegions = {
+  en: [
+    {
+      id: "north-america",
+      name: "North America",
+      growth: 6.15, // CAGR 2024–2033
+      companies: 2325, // Number of brand name pharmaceutical manufacturers in the U.S. as of 2023
+      topSectors: ["Oncology", "Neurology", "Biologics"],
+      description:
+        "The U.S. leads the global pharmaceutical market, accounting for approximately 30–40% of global sales, with a strong focus on oncology and biologics.",
+    },
+    {
+      id: "europe",
+      name: "Europe",
+      growth: 5.7, // CAGR 2024–2033
+      companies: 1800, // Estimated number of pharmaceutical companies in Europe
+      topSectors: ["Oncology", "Cardiovascular", "Vaccines"],
+      description:
+        "Europe maintains a robust pharmaceutical industry with significant contributions in oncology, cardiovascular treatments, and vaccine development.",
+    },
+    {
+      id: "asia-pacific",
+      name: "Asia-Pacific",
+      growth: 11.4, // CAGR 2024–2030
+      companies: 3100, // Estimated number of pharmaceutical companies in Asia-Pacific
+      topSectors: ["Generics", "Biosimilars", "Traditional Medicine"],
+      description:
+        "Asia-Pacific is the fastest-growing pharmaceutical market, driven by generics, biosimilars, and traditional medicine, with significant contributions from countries like India and China.",
+    },
+    {
+      id: "emerging-markets",
+      name: "Emerging Markets",
+      growth: 9.8, // Estimated CAGR
+      companies: 1420, // Estimated number of pharmaceutical companies in emerging markets
+      topSectors: ["Infectious Diseases", "Affordable Medicine", "Telehealth"],
+      description:
+        "Emerging markets are rapidly developing pharmaceutical infrastructures focusing on accessible healthcare, infectious disease treatment, and telehealth solutions.",
+    },
+  ],
+  ar: [
+    {
+      id: "north-america",
+      name: "أمريكا الشمالية",
+      growth: 6.15,
+      companies: 2325,
+      topSectors: ["علم الأورام", "علم الأعصاب", "المنتجات البيولوجية"],
+      description:
+        "تتصدر الولايات المتحدة سوق الأدوية العالمي، حيث تمثل ما يقرب من 30–40٪ من المبيعات العالمية، مع تركيز قوي على علم الأورام والمنتجات البيولوجية.",
+    },
+    {
+      id: "europe",
+      name: "أوروبا",
+      growth: 5.7,
+      companies: 1800,
+      topSectors: ["علم الأورام", "أمراض القلب والأوعية الدموية", "اللقاحات"],
+      description:
+        "تحافظ أوروبا على صناعة دوائية قوية بمساهمات كبيرة في مجالات علم الأورام، وعلاج أمراض القلب، وتطوير اللقاحات.",
+    },
+    {
+      id: "asia-pacific",
+      name: "آسيا والمحيط الهادئ",
+      growth: 11.4,
+      companies: 3100,
+      topSectors: ["الأدوية الجنيسة", "البدائل البيولوجية", "الطب التقليدي"],
+      description:
+        "تُعد آسيا والمحيط الهادئ السوق الأسرع نموًا في صناعة الأدوية، مدفوعة بالأدوية الجنيسة، والبدائل البيولوجية، والطب التقليدي، مع مساهمات كبيرة من دول مثل الهند والصين.",
+    },
+    {
+      id: "emerging-markets",
+      name: "الأسواق الناشئة",
+      growth: 9.8,
+      companies: 1420,
+      topSectors: [
+        "الأمراض المعدية",
+        "الأدوية ميسورة التكلفة",
+        "الرعاية الصحية عن بُعد",
+      ],
+      description:
+        "تعمل الأسواق الناشئة على تطوير بنى تحتية دوائية بسرعة، مع تركيز على الرعاية الصحية الميسورة، وعلاج الأمراض المعدية، وحلول الرعاية عن بُعد.",
+    },
+  ],
+};
+interface LangProps {
+  lang: "en" | "ar";
+}
 
-export default function GlobalPharmaMap() {
+export default function GlobalPharmaMap({ lang }: LangProps) {
   const [activeRegion, setActiveRegion] = useState<string>("north-america");
-
+  const regions = translatedRegions[lang];
   const selectedRegion =
     regions.find((region) => region.id === activeRegion) || regions[0];
-
+  const t = translations[lang];
   return (
     <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4">
         {/* Section header with scroll animation */}
         <SectionHeader
-          title="Global Pharmaceutical Landscape"
+          title={t.title}
           icon={<Globe className="mr-2" />}
-          description="Discover investment opportunities across the world's pharmaceutical markets and track regional growth trends."
+          description={t.description}
+          lang={lang}
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -119,12 +217,12 @@ export default function GlobalPharmaMap() {
 
                 {/* Region labels */}
                 <text
-                  x="200"
+                  x={lang === "en" ? 200 : 250}
                   y="150"
                   fill={activeRegion === "north-america" ? "#fff" : "#333"}
                   fontSize="12"
                 >
-                  North America
+                  {t.regions["north-america"]}
                 </text>
                 <text
                   x="540"
@@ -132,33 +230,37 @@ export default function GlobalPharmaMap() {
                   fill={activeRegion === "europe" ? "#fff" : "#333"}
                   fontSize="12"
                 >
-                  Europe
+                  {t.regions["europe"]}
                 </text>
                 <text
-                  x="640"
+                  x={lang === "en" ? 640 : 700}
                   y="230"
                   fill={activeRegion === "asia-pacific" ? "#fff" : "#333"}
                   fontSize="12"
                 >
-                  Asia-Pacific
+                  {t.regions["asia-pacific"]}
                 </text>
                 <text
-                  x="340"
+                  x={lang === "en" ? 280 : 350}
                   y="280"
                   fill={activeRegion === "emerging-markets" ? "#fff" : "#333"}
                   fontSize="12"
                 >
-                  Emerging Markets
+                  {t.regions["emerging-markets"]}
                 </text>
               </svg>
 
-              <div className="absolute bottom-4 left-4 bg-white/80 backdrop-blur-sm p-2 rounded-md text-xs">
-                Click on a region to view detailed information
+              <div
+                className={`absolute bottom-4 ${
+                  lang == "en" ? "left-4" : "left--4"
+                } bg-white/80 backdrop-blur-sm p-2 rounded-md text-xs`}
+              >
+                {t.labels.clickRegion}
               </div>
             </div>
           </MapAnimation>
 
-          <RegionDetailCard region={selectedRegion} />
+          <RegionDetailCard region={selectedRegion} lang={lang} />
         </div>
       </div>
     </section>
@@ -166,7 +268,12 @@ export default function GlobalPharmaMap() {
 }
 
 // Add these components at the end of the file, before the closing }
-function SectionHeader({ title, icon, description }: SectionHeaderProps) {
+function SectionHeader({
+  title,
+  icon,
+  description,
+  lang,
+}: LangProps & SectionHeaderProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
@@ -184,7 +291,7 @@ function SectionHeader({ title, icon, description }: SectionHeaderProps) {
         animate={isInView ? { scale: 1 } : { scale: 0.9 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        {icon} {title}
+        {lang == "ar" && `${title}`} {icon} {lang == "en" && `${title}`}
       </motion.h2>
       <motion.div
         initial={{ width: 0 }}
@@ -246,10 +353,10 @@ function RegionPath({ path, isActive, onClick, delay }: RegionPathProps) {
   );
 }
 
-function RegionDetailCard({ region }: RegionDetailCardProps) {
+function RegionDetailCard({ region, lang }: LangProps & RegionDetailCardProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-
+  const t = translations[lang];
   return (
     <motion.div
       ref={ref}
@@ -277,12 +384,13 @@ function RegionDetailCard({ region }: RegionDetailCardProps) {
                     : "bg-blue-100 text-blue-800"
                 }`}
               >
+                {lang == "ar" && t.labels.growth}
                 {region.growth > 8 ? (
                   <TrendingUp className="mr-1 h-3 w-3" />
                 ) : (
                   <TrendingDown className="mr-1 h-3 w-3" />
                 )}
-                {region.growth}% Growth
+                {lang == "en" && t.labels.growth}
               </Badge>
             </div>
 
@@ -298,7 +406,7 @@ function RegionDetailCard({ region }: RegionDetailCardProps) {
           >
             <div>
               <h4 className="text-sm font-semibold text-gray-500">
-                TOP SECTORS
+                {t.labels.topSectors}
               </h4>
               <div className="flex flex-wrap gap-2 mt-1">
                 {region.topSectors.map((sector: string, idx: number) => (
@@ -318,7 +426,7 @@ function RegionDetailCard({ region }: RegionDetailCardProps) {
 
             <div>
               <h4 className="text-sm font-semibold text-gray-500">
-                TRACKED COMPANIES
+                {t.labels.trackedCompanies}
               </h4>
               <motion.p
                 className="text-2xl font-bold text-royalBlue"
@@ -340,7 +448,7 @@ function RegionDetailCard({ region }: RegionDetailCardProps) {
             className="mt-6 pt-4 border-t border-gray-200"
           >
             <h4 className="text-sm font-semibold text-gray-500 mb-2">
-              INVESTMENT OPPORTUNITY
+              {t.labels.investmentOpportunity}
             </h4>
             <motion.div
               className="w-full bg-gray-200 rounded-full h-2.5"
@@ -356,9 +464,9 @@ function RegionDetailCard({ region }: RegionDetailCardProps) {
               ></motion.div>
             </motion.div>
             <div className="flex justify-between text-xs mt-1">
-              <span>Low</span>
-              <span>Medium</span>
-              <span>High</span>
+              <span>{t.labels.opportunityLevels.low}</span>
+              <span>{t.labels.opportunityLevels.medium}</span>
+              <span>{t.labels.opportunityLevels.high}</span>
             </div>
           </motion.div>
         </CardContent>

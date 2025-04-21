@@ -17,9 +17,9 @@ export default function Home() {
       <TopStocksSlider lang="en" />
       <div className="  py-8 ">
         <WhyPharmaSector lang="en" />
-        <BreakthroughSpotlight />
-        <IndustryInsights />
-        <GlobalPharmaMap />
+        <BreakthroughSpotlight lang="en" />
+        <IndustryInsights lang="en" />
+        <GlobalPharmaMap lang="en" />
         <WhyUs lang="en" />
       </div>
 

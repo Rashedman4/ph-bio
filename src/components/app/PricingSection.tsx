@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check, ArrowRight, ArrowLeft, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "./CheckoutForm";
@@ -138,7 +138,7 @@ export default function PricingSection({ lang }: LangProps) {
     }
   };
 
-  const fetchTransactionHistory = async () => {
+  const fetchTransactionHistory = useCallback(async () => {
     if (status !== "authenticated") return;
 
     setHistoryLoading(true);
@@ -156,7 +156,7 @@ export default function PricingSection({ lang }: LangProps) {
     } finally {
       setHistoryLoading(false);
     }
-  };
+  }, [status]);
 
   const handleCancelSubscription = async () => {
     if (status !== "authenticated") return;
@@ -218,7 +218,7 @@ export default function PricingSection({ lang }: LangProps) {
     if (showHistory) {
       fetchTransactionHistory();
     }
-  }, [showHistory, status]);
+  }, [showHistory, status, fetchTransactionHistory]);
 
   const handleSubscribe = async (plan: (typeof pricingPlans)[0]) => {
     if (status !== "authenticated") {
