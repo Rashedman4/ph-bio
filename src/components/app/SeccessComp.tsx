@@ -41,7 +41,7 @@ interface LangProps {
 }
 export default function SuccessComp({ lang }: LangProps) {
   const t = translations[lang];
-  const [amount, setAmount] = useState<string>("");
+  // const [amount, setAmount] = useState<string>("");
   const [latestTransactionAmount, setLatestTransactionAmount] =
     useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -66,7 +66,7 @@ export default function SuccessComp({ lang }: LangProps) {
         .then((res) => res.json())
         .then((data) => {
           if (data.amount) {
-            setAmount((data.amount / 100).toFixed(2)); // Convert cents to dollars
+            //         setAmount((data.amount / 100).toFixed(2)); // Convert cents to dollars
           }
           if (data.latestTransactionAmount) {
             setLatestTransactionAmount(
@@ -79,7 +79,7 @@ export default function SuccessComp({ lang }: LangProps) {
         });
     } else if (amountParam) {
       // If we have an amount parameter, use it directly
-      setAmount(amountParam);
+      // setAmount(amountParam);
     }
   }, []);
 

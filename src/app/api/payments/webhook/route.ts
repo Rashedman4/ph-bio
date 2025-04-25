@@ -115,6 +115,12 @@ export async function POST(request: NextRequest) {
 
               // If there's a discount, record it
               if (hasDiscount) {
+                const firstDiscount = discounts[0];
+                const couponId =
+                  typeof firstDiscount === "object" && "coupon" in firstDiscount
+                    ? firstDiscount.coupon?.id
+                    : null;
+
                 await client.query(
                   `INSERT INTO subscription_discounts (
                     user_id,
@@ -130,7 +136,7 @@ export async function POST(request: NextRequest) {
                     "first_time",
                     discountAmount,
                     originalAmount,
-                    discounts[0]?.coupon?.id,
+                    couponId,
                   ]
                 );
               }

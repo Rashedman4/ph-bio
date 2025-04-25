@@ -128,6 +128,7 @@ async function createOrRetrieveFirstTimeCoupon() {
     return existingCoupon.id;
   } catch (error) {
     // Create new coupon if it doesn't exist
+    console.log(error);
     const coupon = await stripe.coupons.create({
       id: COUPON_ID,
       percent_off: 50,
