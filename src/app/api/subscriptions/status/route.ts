@@ -26,11 +26,17 @@ export async function GET(request: NextRequest) {
          LIMIT 1`,
         [token.email]
       );
-
+      const { rows: recrods } = await client.query(
+        `SELECT status, end_date, cancel_at_period_end 
+         FROM subscriptions 
+         WHERE user_id = (SELECT id FROM users WHERE email = $1)`,
+        [token.email]
+      );
       return NextResponse.json({
         isActive: rows.length > 0,
         endDate: rows[0]?.end_date || null,
         cancelAtPeriodEnd: rows[0]?.cancel_at_period_end || false,
+        isFirstTime: recrods.length == 0,
       });
     } finally {
       client.release();

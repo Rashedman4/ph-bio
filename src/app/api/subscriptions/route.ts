@@ -3,6 +3,9 @@ import pool from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 
 export async function POST(request: NextRequest) {
+  function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   try {
     // Get subscription ID from request body
     const { subscriptionId } = await request.json();
@@ -29,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     try {
       // Get subscription details with package information
-      const { rows } = await client.query(
+      let { rows } = await client.query(
         `SELECT s.id, s.status, s.start_date, s.end_date, s.stripe_subscription_id, 
                 s.current_period_start, s.current_period_end, s.cancel_at_period_end,
                 p.name as package_name, p.interval, p.interval_count, p.amount
@@ -40,6 +43,29 @@ export async function POST(request: NextRequest) {
       );
 
       if (rows.length === 0) {
+        // Wait for 2 seconds
+        await delay(2000);
+
+        // Retry the query
+        ({ rows } = await client.query(
+          `SELECT s.id, s.status, s.start_date, s.end_date, s.stripe_subscription_id, 
+                  s.current_period_start, s.current_period_end, s.cancel_at_period_end,
+                  p.name as package_name, p.interval, p.interval_count, p.amount
+           FROM subscriptions s
+           JOIN packages p ON s.package_id = p.id
+           WHERE s.stripe_subscription_id = $1 AND s.user_id = (SELECT id FROM users WHERE email = $2)`,
+          [subscriptionId, token.email]
+        ));
+
+        if (rows.length === 0) {
+          return NextResponse.json(
+            { error: "Subscription not found" },
+            { status: 404 }
+          );
+        }
+      }
+      console.log(`Rows: ${rows}`);
+      if (rows.length === 0) {
         return NextResponse.json(
           { error: "Subscription not found" },
           { status: 404 }
@@ -47,7 +73,17 @@ export async function POST(request: NextRequest) {
       }
 
       const subscription = rows[0];
+      const { rows: transactionRows } = await client.query(
+        `SELECT amount
+         FROM transactions
+         WHERE subscription_id = $1
+         ORDER BY created_at DESC
+         LIMIT 1`,
+        [subscription.id]
+      );
 
+      // Extract amount or default to null if not found
+      const latestTransactionAmount = transactionRows[0]?.amount || null;
       // Format dates for client
       const formattedSubscription = {
         id: subscription.id,
@@ -61,6 +97,7 @@ export async function POST(request: NextRequest) {
         interval: subscription.interval,
         intervalCount: subscription.interval_count,
         amount: subscription.amount, // This is in cents
+        latestTransactionAmount,
       };
 
       return NextResponse.json(formattedSubscription);

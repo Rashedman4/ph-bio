@@ -11,34 +11,73 @@ import CheckoutForm from "./CheckoutForm";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";
 
-const pricingPlans = [
+/* const pricingPlans = [
   {
-    id: "price_1RBLSCRpsg73CUGeQ4Fw4Ufx",
+    //id: "price_1RBLSCRpsg73CUGeQ4Fw4Ufx",
+    id: "price_1Qz7r5Rpsg73CUGeCexgf4TN",
     name: "1 Day",
     nameAr: "1 أسبوع",
     price: 2.0,
+    discountedPrice: 1.0,
     interval: "Daily",
     intervalAr: "أسبوع",
   },
   {
-    id: "price_1RBLSnRpsg73CUGevmKcL4iY",
+    //id: "price_1RBLSnRpsg73CUGevmKcL4iY",
+    id: "price_1Qz7rpRpsg73CUGegjYOj3Ag",
     name: "3 Months",
     nameAr: "3 أشهر",
     price: 49.99,
+    discountedPrice: 24.99,
     interval: "quarter",
     intervalAr: "ربع",
     popular: true,
   },
   {
-    id: "price_1RBLTCRpsg73CUGebkUMJOa7",
+    // id: "price_1RBLTCRpsg73CUGebkUMJOa7",
+    id: "price_1Qz7sKRpsg73CUGeas3PqPQL",
     name: "6 Months",
     nameAr: "6 أشهر",
     price: 79.99,
+    discountedPrice: 39.99,
+    interval: "half-year",
+    intervalAr: "نصف سنة",
+  },
+]; */
+const pricingPlans = [
+  {
+    id: "price_1RBLSCRpsg73CUGeQ4Fw4Ufx",
+    //id: "price_1Qz7r5Rpsg73CUGeCexgf4TN",
+    name: "1 Day",
+    nameAr: "1 أسبوع",
+    price: 2.0,
+    discountedPrice: 1.0,
+    interval: "Daily",
+    intervalAr: "أسبوع",
+  },
+  {
+    //id: "price_1RBLSnRpsg73CUGevmKcL4iY",
+    //id: "price_1Qz7rpRpsg73CUGegjYOj3Ag",
+    id: "price_1RHbqcRpsg73CUGen9r0hCBG",
+    name: "3 Months",
+    nameAr: "3 أشهر",
+    price: 100.0,
+    discountedPrice: 50.0,
+    interval: "quarter",
+    intervalAr: "ربع",
+    popular: true,
+  },
+  {
+    // id: "price_1RBLTCRpsg73CUGebkUMJOa7",
+    id: "price_1Qz7sKRpsg73CUGeas3PqPQL",
+    name: "6 Months",
+    nameAr: "6 أشهر",
+    price: 160.0,
+    discountedPrice: 80.0,
     interval: "half-year",
     intervalAr: "نصف سنة",
   },
 ];
-
 if (!process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
 }
@@ -71,6 +110,11 @@ const translations = {
       "Your subscription will automatically renew at the end of each billing period. To cancel, use the 'Cancel Subscription' button above. The cancellation will take effect at the end of your current billing period. To change your plan, you'll need to cancel your current subscription first, wait for it to end, and then subscribe to your desired plan.",
     viewHistory: "View History",
     viewHistoryInactive: "View Payment History",
+    specialOffer: "Special Offer",
+    firstBillDiscount: "50% OFF on your first bill",
+    regularPrice: "Regular price",
+    discountedPrice: "First bill",
+    nextBills: "Next bills at regular price",
   },
   ar: {
     title: "اختر خطتك",
@@ -91,6 +135,11 @@ const translations = {
       "سيتم تجديد اشتراكك تلقائياً في نهاية كل فترة فوترة. للإلغاء، استخدم زر 'إلغاء الاشتراك' أعلاه. سيبدأ الإلغاء في نهاية فترة الفوترة الحالية. لتغيير خطتك، ستحتاج إلى إلغاء اشتراكك الحالي أولاً، والانتظار حتى ينتهي، ثم الاشتراك في الخطة المطلوبة.",
     viewHistory: "عرض السجل",
     viewHistoryInactive: "عرض سجل المدفوعات",
+    specialOffer: "عرض خاص",
+    firstBillDiscount: "خصم 50% على الفاتورة الأولى",
+    regularPrice: "السعر العادي",
+    discountedPrice: "الفاتورة الأولى",
+    nextBills: "الفواتير التالية بالسعر العادي",
   },
 };
 
@@ -98,6 +147,7 @@ interface SubscriptionStatus {
   isActive: boolean;
   endDate: string | null;
   cancelAtPeriodEnd: boolean;
+  isFirstTime: boolean;
 }
 
 export default function PricingSection({ lang }: LangProps) {
@@ -116,6 +166,7 @@ export default function PricingSection({ lang }: LangProps) {
       isActive: false,
       endDate: null,
       cancelAtPeriodEnd: false,
+      isFirstTime: true,
     });
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -232,6 +283,7 @@ export default function PricingSection({ lang }: LangProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           productType: plan.id,
+          isFirstTimeSubscriber: subscriptionStatus.isFirstTime,
         }),
       });
 
@@ -464,10 +516,59 @@ export default function PricingSection({ lang }: LangProps) {
                       {lang === "ar" ? plan.nameAr : plan.name}
                     </CardTitle>
                     <div className="text-center mt-4">
-                      <span className="text-4xl font-bold">${plan.price}</span>
-                      <span className="text-gray-600">
-                        / {lang === "ar" ? plan.intervalAr : plan.interval}
-                      </span>
+                      {subscriptionStatus.isFirstTime ||
+                      subscriptionStatus.isFirstTime == null ? (
+                        <>
+                          <div className="mb-2">
+                            <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">
+                              {t.specialOffer}
+                            </span>
+                          </div>
+
+                          <div className="mb-2">
+                            <span className="text-sm text-gray-600">
+                              {t.discountedPrice}
+                            </span>
+                            <div>
+                              <span className="text-4xl font-bold text-brightTeal">
+                                ${plan.discountedPrice}
+                              </span>
+                              <span className="text-gray-600">
+                                /{" "}
+                                {lang === "ar"
+                                  ? plan.intervalAr
+                                  : plan.interval}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="mt-2">
+                            <span className="text-sm text-gray-600">
+                              {t.nextBills}
+                            </span>
+                            <div>
+                              <span className="text-2xl font-semibold">
+                                ${plan.price}
+                              </span>
+                              <span className="text-gray-600">
+                                /{" "}
+                                {lang === "ar"
+                                  ? plan.intervalAr
+                                  : plan.interval}
+                              </span>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div>
+                          <span className="text-4xl font-bold">
+                            ${plan.price}
+                          </span>
+                          <span className="text-gray-600">
+                            / {lang === "ar" ? plan.intervalAr : plan.interval}
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </CardHeader>
                   <CardContent>
@@ -543,13 +644,20 @@ export default function PricingSection({ lang }: LangProps) {
                               {lang === "en" ? "Plan" : "الخطة"}
                             </th>
                             <th className="py-3 px-4 text-left">
-                              {lang === "en" ? "Amount" : "المبلغ"}
+                              {lang === "en"
+                                ? "Original Amount"
+                                : "المبلغ الأصلي"}
+                            </th>
+                            <th className="py-3 px-4 text-left">
+                              {lang === "en" ? "Discount" : "الخصم"}
+                            </th>
+                            <th className="py-3 px-4 text-left">
+                              {lang === "en"
+                                ? "Final Amount"
+                                : "المبلغ النهائي"}
                             </th>
                             <th className="py-3 px-4 text-left">
                               {lang === "en" ? "Status" : "الحالة"}
-                            </th>
-                            <th className="py-3 px-4 text-left">
-                              {lang === "en" ? "Payment Method" : "طريقة الدفع"}
                             </th>
                           </tr>
                         </thead>
@@ -568,6 +676,26 @@ export default function PricingSection({ lang }: LangProps) {
                                     {transaction.package_name || "N/A"}
                                   </td>
                                   <td className="py-3 px-4">
+                                    $
+                                    {(
+                                      (transaction.original_amount ||
+                                        transaction.amount) / 100
+                                    ).toFixed(2)}{" "}
+                                    {transaction.currency.toUpperCase()}
+                                  </td>
+                                  <td className="py-3 px-4">
+                                    {transaction.discount_amount ? (
+                                      <span className="text-green-600">
+                                        -$
+                                        {(
+                                          transaction.discount_amount / 100
+                                        ).toFixed(2)}
+                                      </span>
+                                    ) : (
+                                      "-"
+                                    )}
+                                  </td>
+                                  <td className="py-3 px-4">
                                     ${(transaction.amount / 100).toFixed(2)}{" "}
                                     {transaction.currency.toUpperCase()}
                                   </td>
@@ -583,9 +711,6 @@ export default function PricingSection({ lang }: LangProps) {
                                     >
                                       {transaction.status}
                                     </span>
-                                  </td>
-                                  <td className="py-3 px-4 capitalize">
-                                    {transaction.payment_method}
                                   </td>
                                 </tr>
                               )
@@ -612,6 +737,8 @@ export default function PricingSection({ lang }: LangProps) {
               <CheckoutForm
                 clientSecret={clientSecret}
                 amount={selectedPlan.price}
+                discountedAmount={selectedPlan.discountedPrice}
+                isFirstTimeSubscriber={subscriptionStatus.isFirstTime}
                 onClose={handleCloseCheckout}
                 lang={lang}
                 subscriptionId={subscriptionId || undefined}

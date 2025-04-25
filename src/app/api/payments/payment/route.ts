@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     const client = await pool.connect();
     try {
-      // Get price ID from packages table
+      // Get price ID and other details from packages table
       const {
         rows: [package_],
       } = await client.query(
@@ -49,18 +49,16 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Check existing subscription
-      /* const {
-        rows: [existingSubscription],
-      } = await client.query(
-        `SELECT id, status 
+      // Check if this is user's first subscription
+      const { rows: previousSubscriptions } = await client.query(
+        `SELECT COUNT(*) as count
          FROM subscriptions 
-         WHERE user_id = (SELECT id FROM users WHERE email = $1)
-         ORDER BY created_at DESC 
-         LIMIT 1`,
+         WHERE user_id = (SELECT id FROM users WHERE email = $1)`,
         [userEmail]
       );
- */
+      console.log(previousSubscriptions);
+      const isFirstTimeSubscriber = previousSubscriptions[0].count == 0;
+
       // Create or retrieve customer
       const customer = await stripe.customers.list({
         email: userEmail,
@@ -72,8 +70,10 @@ export async function POST(req: NextRequest) {
         const newCustomer = await stripe.customers.create({ email: userEmail });
         customerId = newCustomer.id;
       }
+      console.log("Is first-time subscriber:", isFirstTimeSubscriber);
+      console.log("Using coupon ID:", await createOrRetrieveFirstTimeCoupon());
 
-      // Create a subscription instead of a payment intent
+      // Create a subscription with a trial period for the first payment
       const stripeSubscription = await stripe.subscriptions.create({
         customer: customerId,
         items: [{ price: package_.stripe_price_id }],
@@ -82,10 +82,19 @@ export async function POST(req: NextRequest) {
           payment_method_types: ["card"],
           save_default_payment_method: "on_subscription",
         },
+        // Apply 50% discount for first-time subscribers
+        discounts: isFirstTimeSubscriber
+          ? [
+              {
+                coupon: await createOrRetrieveFirstTimeCoupon(),
+              },
+            ]
+          : undefined,
         expand: ["latest_invoice.payment_intent"],
         metadata: {
           productType,
           userEmail,
+          isFirstTimeSubscription: isFirstTimeSubscriber.toString(),
         },
       });
 
@@ -106,5 +115,25 @@ export async function POST(req: NextRequest) {
       { error: "Subscription processing failed" },
       { status: 500 }
     );
+  }
+}
+
+// Helper function to create or retrieve the first-time subscriber coupon
+async function createOrRetrieveFirstTimeCoupon() {
+  const COUPON_ID = "FIRST_TIME_50_OFF";
+
+  try {
+    // Try to retrieve existing coupon
+    const existingCoupon = await stripe.coupons.retrieve(COUPON_ID);
+    return existingCoupon.id;
+  } catch (error) {
+    // Create new coupon if it doesn't exist
+    const coupon = await stripe.coupons.create({
+      id: COUPON_ID,
+      percent_off: 50,
+      duration: "once",
+      name: "50% Off First Bill",
+    });
+    return coupon.id;
   }
 }

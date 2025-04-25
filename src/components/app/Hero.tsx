@@ -9,7 +9,7 @@ import {
   Zap,
   ArrowLeft,
 } from "lucide-react";
-
+import Link from "next/link";
 interface LangProps {
   lang: "en" | "ar";
 }
@@ -19,7 +19,7 @@ const translations = {
     title: "Invest Smart in Pharma Stocks",
     description:
       "Unlock the potential of pharmaceutical markets with our advanced insights and expert analysis.",
-    getStarted: "Get Started",
+    getStarted: "Subscribe Now",
     learnMore: "Learn More",
     advantages: "PharmaStock Advantages",
     realTimeAnalysis: "Real-time market analysis",
@@ -30,7 +30,7 @@ const translations = {
     title: "استثمر بذكاء في الأسهم الدوائية",
     description:
       "استكشف إمكانيات الأسهم الدوائية مع رؤانا المتقدمة وتحليلات الخبراء.",
-    getStarted: "ابدأ الآن",
+    getStarted: "أشترك الآن",
     learnMore: "اعرف المزيد",
     advantages: "مزايا PharmaStock",
     realTimeAnalysis: "تحليل السوق في الوقت الحقيقي",
@@ -80,17 +80,19 @@ export default function Hero({ lang }: LangProps) {
               transition={{ delay: 0.6, duration: 0.3 }}
               className="flex space-x-4 rtl:space-x-reverse"
             >
-              <Button
-                size="lg"
-                className="bg-brightTeal hover:bg-brightTeal/90 text-royalBlue"
-              >
-                {t.getStarted}
-                {lang == "ar" ? (
-                  <ArrowLeft className="mr-2 h-5 w-5" />
-                ) : (
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                )}
-              </Button>
+              <Link href="/subscription">
+                <Button
+                  size="lg"
+                  className="bg-brightTeal hover:bg-brightTeal/90 text-royalBlue"
+                >
+                  {t.getStarted}
+                  {lang == "ar" ? (
+                    <ArrowLeft className="mr-2 h-5 w-5" />
+                  ) : (
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  )}
+                </Button>
+              </Link>
               <Button
                 size="lg"
                 variant="outline"

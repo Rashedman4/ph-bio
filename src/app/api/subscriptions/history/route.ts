@@ -43,6 +43,8 @@ export async function GET(request: NextRequest) {
           t.status,
           t.payment_method,
           t.created_at,
+          t.original_amount,
+          t.discount_amount,
           p.name as package_name,
           p.interval,
           p.interval_count

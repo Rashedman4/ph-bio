@@ -42,6 +42,8 @@ interface LangProps {
 export default function SuccessComp({ lang }: LangProps) {
   const t = translations[lang];
   const [amount, setAmount] = useState<string>("");
+  const [latestTransactionAmount, setLatestTransactionAmount] =
+    useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [pinCode, setPinCode] = useState("");
   const [copied, setCopied] = useState(false);
@@ -65,6 +67,11 @@ export default function SuccessComp({ lang }: LangProps) {
         .then((data) => {
           if (data.amount) {
             setAmount((data.amount / 100).toFixed(2)); // Convert cents to dollars
+          }
+          if (data.latestTransactionAmount) {
+            setLatestTransactionAmount(
+              (data.latestTransactionAmount / 100).toFixed(2)
+            ); // Convert cents to dollars
           }
         })
         .catch((error) => {
@@ -118,7 +125,14 @@ export default function SuccessComp({ lang }: LangProps) {
               </h2>
               <div className="space-y-2">
                 <p>
-                  <span className="font-medium">{t.amount}:</span> ${amount}
+                  <span className="font-medium">{t.amount}:</span>
+                  {latestTransactionAmount ? (
+                    `$${latestTransactionAmount}`
+                  ) : (
+                    <span className="text-gray-400 animate-pulse">
+                      Loading...
+                    </span>
+                  )}
                 </p>
               </div>
             </div>

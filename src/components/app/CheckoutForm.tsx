@@ -14,11 +14,15 @@ interface CheckoutFormProps {
   onClose: () => void;
   lang: "en" | "ar";
   subscriptionId?: string;
+  discountedAmount?: number;
+  isFirstTimeSubscriber?: boolean;
 }
 
 export default function CheckoutForm({
   // clientSecret,
   amount,
+  discountedAmount,
+  isFirstTimeSubscriber,
   onClose,
   lang,
   subscriptionId,
@@ -27,6 +31,10 @@ export default function CheckoutForm({
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loading, setLoading] = useState(false);
+
+  const finalAmount = isFirstTimeSubscriber
+    ? discountedAmount || amount
+    : amount;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -60,7 +68,7 @@ export default function CheckoutForm({
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/${lang}/success?amount=${amount}`,
+          return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/${lang}/success?amount=${finalAmount}`,
         },
       });
 
@@ -75,7 +83,42 @@ export default function CheckoutForm({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
-        <h3 className="text-xl font-bold mb-4">Complete Payment</h3>
+        <h3 className="text-xl font-bold mb-4">
+          {lang === "en" ? "Complete Payment" : "إتمام الدفع"}
+        </h3>
+
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          {isFirstTimeSubscriber && (
+            <div className="mb-2">
+              <div className="text-sm text-gray-600">
+                {lang === "en" ? "Regular price" : "السعر العادي"}
+              </div>
+              <div className="text-lg line-through text-gray-400">
+                ${amount}
+              </div>
+            </div>
+          )}
+          <div>
+            <div className="text-sm text-gray-600">
+              {isFirstTimeSubscriber
+                ? lang === "en"
+                  ? "Special offer price"
+                  : "سعر العرض الخاص"
+                : lang === "en"
+                ? "Amount to pay"
+                : "المبلغ المطلوب"}
+            </div>
+            <div className="text-2xl font-bold text-green-600">
+              ${finalAmount}
+            </div>
+            {isFirstTimeSubscriber && (
+              <div className="mt-1 text-sm text-green-600">
+                {lang === "en" ? "50% off applied!" : "تم تطبيق خصم 50٪!"}
+              </div>
+            )}
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <PaymentElement />
           {errorMessage && (
@@ -88,10 +131,16 @@ export default function CheckoutForm({
               onClick={onClose}
               disabled={loading}
             >
-              Cancel
+              {lang === "en" ? "Cancel" : "إلغاء"}
             </Button>
             <Button type="submit" disabled={!stripe || loading}>
-              {loading ? "Processing..." : `Pay $${amount}`}
+              {loading
+                ? lang === "en"
+                  ? "Processing..."
+                  : "جاري المعالجة..."
+                : lang === "en"
+                ? `Pay $${finalAmount}`
+                : `ادفع $${finalAmount}`}
             </Button>
           </div>
         </form>
