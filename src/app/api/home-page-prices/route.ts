@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const STOCK_SYMBOLS = [
   "JNJ",
@@ -21,7 +21,7 @@ const API_URL =
 let cache: { data: any; timestamp: number } | null = null;
 const CACHE_DURATION = 2 * 60 * 60 * 1000; // 2 hours in ms
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   // Check cache
   if (cache && Date.now() - cache.timestamp < CACHE_DURATION) {
     return NextResponse.json(cache.data, { status: 200 });
@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
       });
     } catch (e) {
       // skip on error
+      console.log(e);
       continue;
     }
   }
