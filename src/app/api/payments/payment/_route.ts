@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server";
+/* import { NextResponse, NextRequest } from "next/server";
 import Stripe from "stripe";
 import pool from "@/lib/db";
 import { getToken } from "next-auth/jwt";
@@ -138,3 +138,4 @@ async function createOrRetrieveFirstTimeCoupon() {
     return coupon.id;
   }
 }
+ */

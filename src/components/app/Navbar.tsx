@@ -54,7 +54,7 @@ export default function Navbar() {
   };
   const navItems = isArabic
     ? [
-        { href: "/ar/subscription", label: "الأشتراكات" },
+        //{ href: "/ar/subscription", label: "الأشتراكات" },
         { href: "/ar/history", label: "النتائج" },
         { href: "/ar/signals", label: "الأفكار" },
         { href: "/ar/daily-video", label: "الفيديو اليومي" },
@@ -69,7 +69,7 @@ export default function Navbar() {
         { href: "/en/daily-video", label: "Daily Video" },
         { href: "/en/signals", label: "Ideas" },
         { href: "/en/history", label: "History" },
-        { href: "/en/subscription", label: "Subscriptions" },
+        //  { href: "/en/subscription", label: "Subscriptions" },
       ];
 
   const menuNav = isArabic ? navItems.slice().reverse() : navItems;
@@ -82,8 +82,21 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-20">
-          <Link href="/" className="text-2xl font-bold">
-            PharmaStock
+          <Link href="/" className="flex items-center gap-2 text-2xl font-bold">
+            {/*     <Image
+              src="/logo.png"
+              alt="BioPharmaStock Logo"
+              width={40}
+              height={40}
+              className="w-10 h-10 object-contain"
+              priority
+            /> */}
+            <span
+              className=" md:inline-block tracking-tight font-extrabold text-2xl"
+              style={{ letterSpacing: "-1px" }}
+            >
+              Bio<span className="text-brightTeal">Pharma</span>Stock
+            </span>
           </Link>
 
           {/* <Link href="/">
@@ -172,8 +185,13 @@ export default function Navbar() {
         >
           <div className="flex flex-col h-full p-4">
             <div className="flex justify-between items-center mb-8">
-              <Link href="/" className="text-2xl font-bold">
-                PharmaStock
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-2xl font-bold"
+              >
+                <span className="tracking-tight font-extrabold text-xl">
+                  Bio<span className="text-brightTeal">Pharma</span>Stock
+                </span>
               </Link>
               <button onClick={() => setIsOpen(false)}>
                 <X className="h-6 w-6" />

@@ -5,6 +5,7 @@ import Link from "next/link";
 //import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { Rubik } from "next/font/google";
+import Image from "next/image";
 
 // Import Rubik with Arabic subset
 const rubik = Rubik({
@@ -24,7 +25,7 @@ const Footer = () => {
         { href: "/ar/daily-video", label: "الفيديو اليومي" },
         { href: "/ar/signals", label: "الأفكار" },
         { href: "/ar/history", label: "النتائج" },
-        { href: "/ar/subscription", label: "الأشتراكات" },
+        //{ href: "/ar/subscription", label: "الأشتراكات" },
       ]
     : [
         { href: "/en", label: "Home" },
@@ -33,7 +34,7 @@ const Footer = () => {
         { href: "/en/daily-video", label: "Financial Calendar" },
         { href: "/en/signals", label: "Ideas" },
         { href: "/en/history", label: "History" },
-        { href: "/en/subscription", label: "Subscriptions" },
+        //{ href: "/en/subscription", label: "Subscriptions" },
       ];
 
   return (
@@ -57,6 +58,24 @@ const Footer = () => {
                 ? "النجم العالي لتصميم الانظمة ذ.م.م، الإمارات العربية المتحدة، أبو ظبي"
                 : "ALNJAM ALAALI SOFTWARE DESIGN CO. L.L.C, UAE, Abu Dhabi"}
             </p>
+            <div className="mt-4 flex justify-start">
+              <Image
+                src="/logo-transparent-1200x800.png"
+                alt="BioPharmaStock Logo"
+                width={200}
+                height={150}
+                className="hidden md:block md:w-60 md:h-40 object-contain rounded-lg  p-1 shadow"
+                priority
+              />
+              <Image
+                src="/logo-transparent-1200x800.png"
+                alt="BioPharmaStock Logo"
+                width={150}
+                height={100}
+                className="md:hidden md:w-30 md:h-20 object-contain rounded-lg  p-1 shadow"
+                priority
+              />
+            </div>
           </div>
           <div>
             <h4 className="text-md font-semibold mb-4">

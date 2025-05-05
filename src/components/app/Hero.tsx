@@ -10,6 +10,8 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+
 interface LangProps {
   lang: "en" | "ar";
 }
@@ -19,9 +21,9 @@ const translations = {
     title: "Invest Smart in Pharma Stocks",
     description:
       "Unlock the potential of pharmaceutical markets with our advanced insights and expert analysis.",
-    getStarted: "Subscribe Now",
+    getStarted: "Register Now",
     learnMore: "Learn More",
-    advantages: "PharmaStock Advantages",
+    advantages: "Bio Pharma Stock Advantages",
     realTimeAnalysis: "Real-time market analysis",
     highPotential: "High-potential stock picks",
     aiPredictions: "AI-powered predictions",
@@ -30,9 +32,9 @@ const translations = {
     title: "استثمر بذكاء في الأسهم الدوائية",
     description:
       "استكشف إمكانيات الأسهم الدوائية مع رؤانا المتقدمة وتحليلات الخبراء.",
-    getStarted: "أشترك الآن",
+    getStarted: "سجل الآن",
     learnMore: "اعرف المزيد",
-    advantages: "مزايا PharmaStock",
+    advantages: "مزايا Bio Pharma Stock",
     realTimeAnalysis: "تحليل السوق في الوقت الحقيقي",
     highPotential: "اختيارات الأسهم ذات الإمكانات العالية",
     aiPredictions: "تنبؤات مدعومة بالذكاء الاصطناعي",
@@ -41,6 +43,7 @@ const translations = {
 
 export default function Hero({ lang }: LangProps) {
   const t = translations[lang] || translations.en;
+  const { status } = useSession();
 
   const handleScroll = function () {
     const element = document.getElementById("whyUs");
@@ -80,12 +83,18 @@ export default function Hero({ lang }: LangProps) {
               transition={{ delay: 0.6, duration: 0.3 }}
               className="flex space-x-4 rtl:space-x-reverse"
             >
-              <Link href="/subscription">
+              <Link
+                href={status === "authenticated" ? "/signals" : "/auth/login"}
+              >
                 <Button
                   size="lg"
                   className="bg-brightTeal hover:bg-brightTeal/90 text-royalBlue"
                 >
-                  {t.getStarted}
+                  {status === "authenticated"
+                    ? lang === "ar"
+                      ? "اذهب إلى الأفكار"
+                      : "Go to Signals"
+                    : t.getStarted}
                   {lang == "ar" ? (
                     <ArrowLeft className="mr-2 h-5 w-5" />
                   ) : (

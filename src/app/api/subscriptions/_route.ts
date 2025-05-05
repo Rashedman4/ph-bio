@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+/* import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { getToken } from "next-auth/jwt";
 
@@ -112,3 +112,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+ */

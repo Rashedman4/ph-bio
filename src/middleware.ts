@@ -12,7 +12,7 @@ enum Route {
   AdminApi = "/api/admin",
   SignalsApi = "/api/signals",
   DailyVideo = "/daily-video",
-  Pricing = "/subscription",
+  //Pricing = "/subscription",
 }
 
 const PROTECTED_ROUTES = [
@@ -23,7 +23,7 @@ const PROTECTED_ROUTES = [
   Route.DailyVideo,
 ];
 
-const SUBSCRIBED_ROUTES = [Route.Signals, Route.SignalsApi, Route.DailyVideo];
+//const SUBSCRIBED_ROUTES = [Route.Signals, Route.SignalsApi, Route.DailyVideo];
 
 const LANGUAGES = ["en", "ar"];
 const LANGUAGE_COOKIE_NAME = "preferred_language";
@@ -101,11 +101,11 @@ export default withAuth(
           pathname.startsWith(route)
       );
       const isAdminRoute = pathname.startsWith(Route.Admin);
-      const isSubscribedRoute = SUBSCRIBED_ROUTES.some(
+      /*  const isSubscribedRoute = SUBSCRIBED_ROUTES.some(
         (route) =>
           pathname.startsWith("/" + langPrefix + route) ||
           pathname.startsWith(route)
-      );
+      ); */
 
       // Check for auth route loops - if the path contains multiple language prefixes
       const pathSegments = pathname.split("/");
@@ -119,17 +119,6 @@ export default withAuth(
         );
       }
 
-      /*    // Check for auth route loops - if the path contains multiple auth segments
-      const authSegmentCount = pathSegments.filter(
-        (segment) => segment === "auth"
-      ).length;
-      if (authSegmentCount > 1) {
-        // Redirect to the home page with the correct language prefix
-        return NextResponse.redirect(
-          new URL("/" + langPrefix + Route.Home, baseUrl)
-        );
-      }
- */
       if (isAuthRoute && isAuth) {
         return NextResponse.redirect(
           new URL("/" + langPrefix + Route.Home, baseUrl)
@@ -143,11 +132,6 @@ export default withAuth(
           return NextResponse.redirect(new URL("/en" + Route.Home, baseUrl));
         }
 
-        /*  // Check if we're already on a login page to prevent loops
-        if (pathname.includes("/auth/login")) {
-          return NextResponse.next();
-        } */
-
         const loginUrl = new URL("/" + lang + Route.SignIn, baseUrl);
         loginUrl.searchParams.set(
           "message",
@@ -160,7 +144,7 @@ export default withAuth(
         return NextResponse.redirect(loginUrl);
       }
 
-      if (isAuth && isSubscribedRoute && userRole !== "admin") {
+      /*  if (isAuth && isSubscribedRoute && userRole !== "admin") {
         // Check subscription status
         try {
           const response = await fetch(
@@ -216,7 +200,7 @@ export default withAuth(
           // If there's an error checking subscription, allow access to avoid blocking users
           return NextResponse.next();
         }
-      }
+      } */
 
       if (isAdminRoute && isAuth && userRole === "admin") {
         return NextResponse.next();
