@@ -11,7 +11,7 @@ const getSignalHistory = unstable_cache(
   async () => {
     const client = await pool.connect();
     const result = await client.query(
-      "SELECT * FROM signal_history ORDER BY created_at DESC"
+      "SELECT * FROM signal_history ORDER BY closing_date DESC"
     );
     client.release();
 
