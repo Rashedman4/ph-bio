@@ -124,14 +124,27 @@ export function EditSignalModal({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="reason" className="text-right">
-                Reason
+              <Label htmlFor="reason_en" className="text-right">
+                Reason English
               </Label>
               <Textarea
-                id="reason"
-                value={editSignal.reason}
+                id="reason_en"
+                value={editSignal.reason_en}
                 onChange={(e) =>
-                  setEditSignal({ ...editSignal, reason: e.target.value })
+                  setEditSignal({ ...editSignal, reason_en: e.target.value })
+                }
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="reason_ar" className="text-right">
+                Reason Arabic
+              </Label>
+              <Textarea
+                id="reason_ar"
+                value={editSignal.reason_ar}
+                onChange={(e) =>
+                  setEditSignal({ ...editSignal, reason_ar: e.target.value })
                 }
                 className="col-span-3"
               />

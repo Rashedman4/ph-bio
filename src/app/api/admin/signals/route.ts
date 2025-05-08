@@ -17,7 +17,6 @@ async function fetchCurrentPrice(symbol: string) {
     throw error;
   }
 }
-
 export async function POST(req: NextRequest) {
   const token = await getToken({ req });
 
@@ -34,7 +33,14 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { symbol, enterPrice, firstTarget, secondTarget, reason } = body;
+    const {
+      symbol,
+      enterPrice,
+      firstTarget,
+      secondTarget,
+      reason_en,
+      reason_ar,
+    } = body;
 
     // Try to fetch current price first
     let currentPrice;
@@ -51,8 +57,8 @@ export async function POST(req: NextRequest) {
 
     const client = await pool.connect();
     const query = `
-      INSERT INTO signals (symbol, type, enter_price, price_now, first_target, second_target, reason)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO signals (symbol, type, enter_price, price_now, first_target, second_target, reason_en,reason_ar)
+      VALUES ($1, $2, $3, $4, $5, $6, $7,$8)
       RETURNING *;
     `;
     const result = await client.query(query, [
@@ -62,7 +68,8 @@ export async function POST(req: NextRequest) {
       currentPrice,
       firstTarget,
       secondTarget,
-      reason,
+      reason_en,
+      reason_ar,
     ]);
     client.release();
 
@@ -100,13 +107,14 @@ export async function PUT(req: NextRequest) {
       priceNow,
       firstTarget,
       secondTarget,
-      reason,
+      reason_en,
+      reason_ar,
     } = await req.json();
     const client = await pool.connect();
     const query = `
       UPDATE signals
-      SET symbol = $1, type = $2, enter_price = $3, price_now = $4, first_target = $5, second_target = $6, reason=$7
-      WHERE id = $8
+      SET symbol = $1, type = $2, enter_price = $3, price_now = $4, first_target = $5, second_target = $6, reason_en=$7,reason_ar=$8
+      WHERE id = $9
       RETURNING *;
     `;
     const result = await client.query(query, [
@@ -116,7 +124,8 @@ export async function PUT(req: NextRequest) {
       priceNow,
       firstTarget,
       secondTarget,
-      reason,
+      reason_en,
+      reason_ar,
       id,
     ]);
     client.release();

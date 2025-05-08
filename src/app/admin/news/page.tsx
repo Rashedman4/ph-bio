@@ -14,10 +14,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PlusCircle, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import useSWR from "swr";
 import { Textarea } from "@/components/ui/textarea";
+import { EditNewsModal } from "@/components/admin/editNews";
 
 interface NewsItem {
   id: number;
@@ -46,6 +47,8 @@ export default function NewsManagement() {
   });
   const [error, setError] = useState<string | null>(null);
   const [bulkNews, setBulkNews] = useState("");
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editNews, setEditNews] = useState<NewsItem | null>(null);
 
   const { data: news, mutate } = useSWR<NewsItem[]>(
     "/api/admin/news",
@@ -139,6 +142,40 @@ export default function NewsManagement() {
       mutate();
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred ");
+    }
+  };
+
+  const handleEdit = (newsItem: NewsItem) => {
+    setEditNews(newsItem);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async () => {
+    if (!editNews) return;
+
+    try {
+      const res = await fetch("/api/admin/news", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: editNews.id,
+          title_en: editNews.title_en,
+          title_ar: editNews.title_ar,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Failed to update news");
+      }
+
+      setIsEditModalOpen(false);
+      setEditNews(null);
+      mutate();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
     }
   };
 
@@ -323,14 +360,24 @@ export default function NewsManagement() {
                     <TableCell dir="rtl">{item.title_ar}</TableCell>
                     <TableCell>{formatDate(item.published_date)}</TableCell>
                     <TableCell>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(item.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEdit(item)}
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDelete(item.id)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -339,6 +386,17 @@ export default function NewsManagement() {
           </div>
         </CardContent>
       </Card>
+
+      <EditNewsModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditNews(null);
+        }}
+        editNews={editNews}
+        setEditNews={setEditNews}
+        handleEditSubmit={handleEditSubmit}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { Rubik } from "next/font/google";
+//import WhatsAppButton from "@/components/app/WhatsAppButton";
 
 // Import Rubik with Arabic subset
 const rubik = Rubik({
@@ -106,6 +107,8 @@ export default function RootLayout({
   return (
     <div dir="rtl" className={`${rubik.className} m-0 p-0 rtl`}>
       {children}
+      {/*       <WhatsAppButton lang="ar" />
+       */}{" "}
     </div>
   );
 }

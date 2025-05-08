@@ -7,7 +7,8 @@ export interface RawSignal {
   first_target: number;
   second_target: number;
   date_opened: string;
-  reason?: string;
+  reason_en?: string;
+  reason_ar?: string;
 }
 
 export interface SignalHistory {
@@ -28,5 +29,6 @@ export interface Signal {
   firstTarget: number;
   secondTarget: number;
   dateOpened: string;
-  reason?: string;
+  reason_en?: string;
+  reason_ar?: string;
 }

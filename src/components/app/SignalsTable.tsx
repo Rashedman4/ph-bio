@@ -19,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import {
   Tooltip,
@@ -192,15 +193,30 @@ export default function SignalsTable({ lang }: LangProps) {
                           <DialogHeader>
                             <DialogTitle>
                               {lang === "ar"
-                                ? `لماذا توصية شراء على سهم ${selectedSignal?.symbol}؟`
-                                : `Why ${selectedSignal?.symbol}  ${selectedSignal?.type} Signal?`}
+                                ? `لماذا توصية ${
+                                    selectedSignal?.type === "Buy"
+                                      ? "شراء"
+                                      : "شراء"
+                                  } على سهم ${selectedSignal?.symbol}؟`
+                                : `Why ${selectedSignal?.symbol} ${selectedSignal?.type} Signal?`}
                             </DialogTitle>
+                            <DialogDescription>
+                              {lang === "ar"
+                                ? `هذه التوصية من نوع ${
+                                    selectedSignal?.type === "Buy"
+                                      ? "شراء"
+                                      : "شراء"
+                                  } على سهم ${selectedSignal?.symbol} بسبب:`
+                                : `This ${selectedSignal?.type.toLowerCase()} signal for ${
+                                    selectedSignal?.symbol
+                                  } is due to:`}
+                            </DialogDescription>
                           </DialogHeader>
-                          <p className="text-xs sm:text-sm">
-                            This {selectedSignal?.type.toLowerCase()} signal for{" "}
-                            {selectedSignal?.symbol} is due to:
-                            <br />
-                            {selectedSignal?.reason}
+
+                          <p className="text-xs sm:text-sm mt-2">
+                            {lang === "ar"
+                              ? selectedSignal?.reason_ar
+                              : selectedSignal?.reason_en}
                           </p>
                         </DialogContent>
                       </Dialog>

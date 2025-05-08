@@ -59,7 +59,6 @@ const addSignalToBackend = async (
   }
   return {};
 };
-
 // Delete signal function
 const deleteSignalFromBackend = async (
   id: number,
@@ -103,7 +102,8 @@ const SignalsManagement: React.FC = () => {
     enterPrice: 0,
     firstTarget: 0,
     secondTarget: 0,
-    reason: "",
+    reason_ar: "",
+    reason_en: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editSignal, setEditSignal] = useState<Signal | null>(null);
@@ -142,7 +142,8 @@ const SignalsManagement: React.FC = () => {
         enterPrice: 0,
         firstTarget: 0,
         secondTarget: 0,
-        reason: "",
+        reason_en: "",
+        reason_ar: "",
       });
       setSignalError(null);
     }
@@ -271,19 +272,38 @@ const SignalsManagement: React.FC = () => {
                 </div>
                 <div className="col-span-full">
                   <label
-                    htmlFor="reason"
+                    htmlFor="reason_en"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
-                    Reason
+                    Reason English
                   </label>
                   <Textarea
-                    id="reason"
+                    id="reason_en"
                     placeholder="Enter reason"
-                    value={newSignal.reason}
+                    value={newSignal.reason_en}
                     onChange={(e) =>
                       setNewSignal({
                         ...newSignal,
-                        reason: e.target.value,
+                        reason_en: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="col-span-full">
+                  <label
+                    htmlFor="reason_ar"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Reason Arabic
+                  </label>
+                  <Textarea
+                    id="reason_ar"
+                    placeholder="Enter reason"
+                    value={newSignal.reason_ar}
+                    onChange={(e) =>
+                      setNewSignal({
+                        ...newSignal,
+                        reason_ar: e.target.value,
                       })
                     }
                   />

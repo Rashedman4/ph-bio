@@ -6,7 +6,7 @@ import BreakthroughSpotlight from "@/components/app/BreakthroughSpotlight";
 import IndustryInsights from "@/components/app/IndustryInsights";
 import GlobalPharmaMap from "@/components/app/GlobalPharmaMap";
 export const metadata = {
-  title: "أفضل أسهم الأدوية وتحليلات السوق | مصدرك الموثوق",
+  title: "أفضل الأسهم الدوائية و تحليلات السوق | Bio Pharma Stock",
   description:
     "احصل على أحدث التحليلات حول أسهم الأدوية ونتائج التجارب السريرية واتجاهات السوق. تحليل مدعوم بالذكاء الاصطناعي لاتخاذ قرارات استثمارية أكثر ذكاءً.",
 };

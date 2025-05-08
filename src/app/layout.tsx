@@ -6,6 +6,7 @@ import type React from "react";
 import SessionWrapper from "@/components/sessionWrapper";
 import { Toaster } from "@/components/ui/toaster";
 import PolicyModal from "@/components/app/PolicyModal";
+import WhatsAppButton from "@/components/app/WhatsAppButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -154,6 +155,7 @@ export default function RootLayout({
         <Toaster />
         <PolicyModal />
         <Footer />
+        <WhatsAppButton lang="en" />
       </body>
     </html>
   );
