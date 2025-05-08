@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { unstable_cache } from "next/cache";
-import { revalidatePath } from "next/cache";
+//import { revalidatePath } from "next/cache";
 
 // Cache key and revalidation time
 const CACHE_KEY = "signals";
