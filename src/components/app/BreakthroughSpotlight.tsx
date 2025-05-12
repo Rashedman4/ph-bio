@@ -182,11 +182,13 @@ export default function BreakthroughSpotlight({ lang }: LangProps) {
                         </span>
                       </div>
                       <div className="mt-auto">
-                        <p className="text-sm opacity-80">
+                        <p className="text-lg opacity-80">
                           <span className="font-semibold">
                             {activeBreakthrough.company}
                           </span>{" "}
-                          ({activeBreakthrough.symbol})
+                          <span className="font-bold">
+                            ({activeBreakthrough.symbol})
+                          </span>
                         </p>
                       </div>
                     </div>

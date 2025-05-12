@@ -99,7 +99,7 @@ export default function HistoryTable({ lang }: LangProps) {
               <AnimatePresence>
                 {historyData.map((item, index) => (
                   <motion.tr
-                    key={`${item.symbol}-${item.entrance_date}`}
+                    key={`${item.symbol}-${item.entrance_date}-${item.id}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}

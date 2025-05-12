@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-//import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
-//import { Button } from "@/components/ui/button";
+import { Twitter } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { Rubik } from "next/font/google";
 import Image from "next/image";
@@ -45,7 +45,7 @@ const Footer = () => {
       dir={isArabic ? "rtl" : "ltr"}
     >
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-4">Bio Pharma Stock</h3>
             <p className="text-sm">
@@ -62,9 +62,9 @@ const Footer = () => {
               <Image
                 src="/logo-transparent-1200x800.png"
                 alt="BioPharmaStock Logo"
-                width={200}
-                height={150}
-                className="hidden md:block md:w-60 md:h-40 object-contain rounded-lg  p-1 shadow"
+                width={150}
+                height={100}
+                className="hidden md:block md:w-45 md:h-30 object-contain rounded-lg  p-1 shadow"
                 priority
               />
               <Image
@@ -101,40 +101,59 @@ const Footer = () => {
               {isArabic ? "اتصل بنا" : "Contact Us"}
             </h4>
             <p className="text-sm mb-2">
-              {" "}
-              {isArabic
-                ? " البريد الإلكتروني: info@biopharmastock.com "
-                : "Email: info@biopharmastock.com"}
+              <a
+                href="mailto:info@biopharmastock.com"
+                className="hover:underline"
+              >
+                {isArabic
+                  ? " البريد الإلكتروني: info@biopharmastock.com "
+                  : "Email: info@biopharmastock.com"}
+              </a>
             </p>
-            {/*   <p className="text-sm">
-              {isArabic
-                ? " رقم الهاتف: info@biopharmastock.com"
-                : "Phone: info@biopharmastock.com"}
-            </p> */}
+            <p className="text-sm">
+              {isArabic ? (
+                <>
+                  رقم الهاتف:{" "}
+                  <a href="tel:+971509363328" className="hover:underline">
+                    <span dir="ltr">+971 50 936 3328</span>
+                  </a>
+                </>
+              ) : (
+                <a href="tel:+971509363328" className="hover:underline">
+                  Phone: +971 50 936 3328
+                </a>
+              )}
+            </p>
           </div>
-          {/*  <div>
+          <div>
             <h4 className="text-md font-semibold mb-4">
               {" "}
               {isArabic ? "تابعنا" : "Follow US"}
             </h4>
             <div className="flex space-x-4">
-              <Button
+              {/*    <Button
                 variant="ghost"
                 size="icon"
                 className="hover:text-brightTeal transition-colors"
               >
                 <Facebook className="h-5 w-5" />
                 <span className="sr-only">Facebook</span>
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hover:text-brightTeal transition-colors"
+              </Button> */}
+              <a
+                href="https://x.com/m_almanasrah" // replace with your actual Twitter link
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </Button>
-              <Button
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:text-brightTeal transition-colors"
+                >
+                  <Twitter className="h-5 w-5" />
+                  <span className="sr-only">Twitter</span>
+                </Button>
+              </a>
+              {/*      <Button
                 variant="ghost"
                 size="icon"
                 className="hover:text-brightTeal transition-colors"
@@ -149,9 +168,9 @@ const Footer = () => {
               >
                 <Instagram className="h-5 w-5" />
                 <span className="sr-only">Instagram</span>
-              </Button>
+              </Button> */}
             </div>
-          </div> */}
+          </div>
         </div>
         <div className="mt-8 pt-4 border-t border-pureWhite/20 text-center text-sm">
           <p>

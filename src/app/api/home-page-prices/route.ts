@@ -2,15 +2,15 @@ import { NextResponse } from "next/server";
 
 const STOCK_SYMBOLS = [
   "JNJ",
-  "PFE",
+  "SNY",
   "MRK",
   "ABBV",
   "LLY",
-  "BMY",
   "AMGN",
-  "GILD",
-  "VRTX",
-  "REGN",
+  "AZN",
+  "NVS",
+  "NVO",
+  "JNJ",
 ];
 
 const API_KEY = process.env.MY_API_KEY;

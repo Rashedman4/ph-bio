@@ -12,6 +12,7 @@ export interface RawSignal {
 }
 
 export interface SignalHistory {
+  id?: number;
   symbol: string;
   entrance_date: string;
   closing_date: string;

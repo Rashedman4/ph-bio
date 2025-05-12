@@ -6,7 +6,7 @@ import type React from "react";
 import SessionWrapper from "@/components/sessionWrapper";
 import { Toaster } from "@/components/ui/toaster";
 import PolicyModal from "@/components/app/PolicyModal";
-import WhatsAppButton from "@/components/app/WhatsAppButton";
+//import WhatsAppButton from "@/components/app/WhatsAppButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -99,8 +99,8 @@ export const metadata = {
     ],
   },
   icons: {
-    icon: "/app/favicon.ico",
-    apple: "/app/apple-com.png",
+    icon: ["/app/favicon.ico", "/app/favicon.svg"],
+    apple: "/app/apple-icon.png",
   },
 };
 
@@ -141,6 +141,24 @@ export default function RootLayout({
             }),
           }}
         />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/app/favicon-16x16.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/app/favicon-32x32.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/app/apple-icon.png"
+        />
+        <link rel="icon" type="image/svg+xml" href="/app/favicon.svg" />
       </head>
       <body
         className={`${inter.className} dark:bg-gray-900 dark:text-white flex flex-col min-h-screen`}
@@ -155,7 +173,6 @@ export default function RootLayout({
         <Toaster />
         <PolicyModal />
         <Footer />
-        <WhatsAppButton lang="en" />
       </body>
     </html>
   );

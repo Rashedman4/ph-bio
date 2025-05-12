@@ -6,7 +6,7 @@ import BreakthroughSpotlight from "@/components/app/BreakthroughSpotlight";
 import IndustryInsights from "@/components/app/IndustryInsights";
 import GlobalPharmaMap from "@/components/app/GlobalPharmaMap";
 export const metadata = {
-  title: "Top Pharmaceutical Stocks & Market Insights | Your Trusted Source",
+  title: "Bio Pharma Stock | Top Pharmaceutical Stocks & Market Insights",
   description:
     "Get the latest insights on pharmaceutical stocks, clinical trial results, and market trends. AI-driven analysis for smarter investments in the pharma sector.",
 };

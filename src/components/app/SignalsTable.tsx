@@ -42,6 +42,14 @@ const formatDate = (dateString: string): string => {
     minute: "2-digit",
   });
 };
+const formatDateSignal = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
 interface LangProps {
   lang: "en" | "ar";
 }
@@ -159,7 +167,7 @@ export default function SignalsTable({ lang }: LangProps) {
                       {signal.second_target}
                     </TableCell>
                     <TableCell className="text-[10px] sm:text-sm md:text-base px-1 sm:px-4 py-2 sm:py-3">
-                      {formatDate(signal.date_opened)}
+                      {formatDateSignal(signal.date_opened)}
                     </TableCell>
                     <TableCell>
                       <Dialog>

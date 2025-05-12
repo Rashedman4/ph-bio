@@ -81,7 +81,7 @@ export default function TopStocksSlider({ lang }: LangProps) {
     <div className="w-full bg-gray-100 py-3 md:py-6 overflow-hidden">
       <div className="container mx-auto px-4">
         <h2 className="text-2xl font-bold text-royalBlue mb-4">
-          {lang === "ar" ? "أفضل الأسهم اداء" : " Top Pharma Stocks"}
+          {lang === "ar" ? "أفضل الأسهم الدوائية" : " Top Pharma Stocks"}
         </h2>
         <motion.div
           animate={{

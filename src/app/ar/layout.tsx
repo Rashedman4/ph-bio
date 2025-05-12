@@ -1,6 +1,6 @@
 import React from "react";
 import { Rubik } from "next/font/google";
-//import WhatsAppButton from "@/components/app/WhatsAppButton";
+import WhatsAppButton from "@/components/app/WhatsAppButton";
 
 // Import Rubik with Arabic subset
 const rubik = Rubik({
@@ -65,7 +65,7 @@ export const metadata = {
     "سوق الأسهم لشركات الرعاية الصحية",
   ],
   openGraph: {
-    title: "أسهم الأدوية الحيوية | إشارات السوق الدوائي والأخبار",
+    title: "أفضل الأسهم الدوائية و تحليلات السوق | Bio Pharma Stock",
     description:
       "ابقَ في الطليعة في سوق الأسهم الدوائية مع إشارات حية، وأخبار يومية، وتحليلات الخبراء. اشترك للحصول على رؤى معمقة.",
     url: "https://biopharmastock.com/ar",
@@ -82,7 +82,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "أسهم الأدوية الحيوية | رؤى سوق الأدوية",
+    title: "أفضل الأسهم الدوائية و تحليلات السوق | Bio Pharma Stock",
     description:
       "إشارات حية للأسهم، وأخبار، وتحديثات عن قطاع الأدوية في الولايات المتحدة. احصل على رؤى يومية وتقارير بالفيديو.",
     images: [
@@ -107,8 +107,7 @@ export default function RootLayout({
   return (
     <div dir="rtl" className={`${rubik.className} m-0 p-0 rtl`}>
       {children}
-      {/*       <WhatsAppButton lang="ar" />
-       */}{" "}
+      <WhatsAppButton lang="ar" />
     </div>
   );
 }

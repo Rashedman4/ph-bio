@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDistanceToNow, format } from "date-fns";
-import { ar } from "date-fns/locale";
-import { Calendar, RefreshCcw, ChevronLeft, ChevronRight } from "lucide-react";
+import { format } from "date-fns";
+//import { ar } from "date-fns/locale";
+import { RefreshCcw, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "../LoadingSpinner";
 
@@ -19,7 +19,7 @@ interface NewsItem {
   title_en: string;
   title_ar: string;
   price: number;
-  published_date: string;
+  //published_date: string;
 }
 
 interface NewsResponse {
@@ -119,7 +119,7 @@ export default function NewsFeed({ lang }: LangProps) {
                 <p className="text-gray-700 mb-2">
                   {lang === "ar" ? item.title_ar : item.title_en}
                 </p>
-                <div className="flex items-center text-sm text-gray-500">
+                {/*    <div className="flex items-center text-sm text-gray-500">
                   <Calendar
                     className={`w-4 h-4 ${lang === "ar" ? "ml-1" : "mr-1"}`}
                   />
@@ -127,7 +127,7 @@ export default function NewsFeed({ lang }: LangProps) {
                     addSuffix: true,
                     locale: lang === "ar" ? ar : undefined,
                   })}
-                </div>
+                </div> */}
               </CardContent>
             </Card>
           </motion.div>
