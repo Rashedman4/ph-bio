@@ -135,40 +135,52 @@ export default function NewsFeed({ lang }: LangProps) {
       </motion.div>
 
       {newsData && newsData.totalPages > 1 && (
-        <div
-          className={`flex justify-center items-center gap-2 mt-6 ${
-            lang === "ar" ? "flex-row-reverse" : ""
-          }`}
-        >
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={currentPage === 1}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            {lang === "ar" ? (
-              <ChevronRight className="w-4 h-4" />
-            ) : (
-              <ChevronLeft className="w-4 h-4" />
-            )}
-          </Button>
-          <span className="text-sm">
-            {lang === "ar"
-              ? `صفحة ${currentPage} من ${newsData.totalPages}`
-              : `Page ${currentPage} of ${newsData.totalPages}`}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={currentPage === newsData.totalPages}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            {lang === "ar" ? (
-              <ChevronLeft className="w-4 h-4" />
-            ) : (
-              <ChevronRight className="w-4 h-4" />
-            )}
-          </Button>
+        <div className="flex justify-center items-center gap-2 mt-6">
+          {lang === "ar" ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+              <span className="text-sm">
+                صفحة {currentPage} من {newsData.totalPages}
+              </span>{" "}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === newsData.totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <span className="text-sm">
+                Page {currentPage} of {newsData.totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === newsData.totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </>
+          )}
         </div>
       )}
     </div>

@@ -199,32 +199,45 @@ export default function SignalsTable({ lang }: LangProps) {
                         </TooltipProvider>
                         <DialogContent>
                           <DialogHeader>
-                            <DialogTitle>
-                              {lang === "ar"
-                                ? `لماذا توصية ${
-                                    selectedSignal?.type === "Buy"
-                                      ? "شراء"
-                                      : "شراء"
-                                  } على سهم ${selectedSignal?.symbol}؟`
-                                : `Why ${selectedSignal?.symbol} ${selectedSignal?.type} Signal?`}
+                            <DialogTitle className="text-center">
+                              {lang === "ar" ? (
+                                <span dir="rtl">
+                                  ما سبب التوصية بشراء السهم{" "}
+                                  {selectedSignal?.symbol}؟
+                                </span>
+                              ) : (
+                                `Why ${selectedSignal?.symbol} ${selectedSignal?.type} Signal?`
+                              )}
                             </DialogTitle>
-                            <DialogDescription>
-                              {lang === "ar"
-                                ? `هذه التوصية من نوع ${
-                                    selectedSignal?.type === "Buy"
-                                      ? "شراء"
-                                      : "شراء"
-                                  } على سهم ${selectedSignal?.symbol} بسبب:`
-                                : `This ${selectedSignal?.type.toLowerCase()} signal for ${
-                                    selectedSignal?.symbol
-                                  } is due to:`}
+                            <DialogDescription
+                              className={`${lang == "ar" && "text-right"}`}
+                            >
+                              {lang === "ar" ? (
+                                <span dir="rtl">
+                                  هذه التوصية من نوع
+                                  {selectedSignal?.type === "Buy"
+                                    ? " شراء"
+                                    : " شراء"}{" "}
+                                  على سهم ${selectedSignal?.symbol} بسبب:
+                                </span>
+                              ) : (
+                                `This ${selectedSignal?.type.toLowerCase()} signal for ${
+                                  selectedSignal?.symbol
+                                } is due to:`
+                              )}
                             </DialogDescription>
                           </DialogHeader>
 
-                          <p className="text-xs sm:text-sm mt-2">
-                            {lang === "ar"
-                              ? selectedSignal?.reason_ar
-                              : selectedSignal?.reason_en}
+                          <p
+                            className={`text-xs sm:text-sm mt-2 ${
+                              lang == "ar" && "text-right"
+                            }`}
+                          >
+                            {lang === "ar" ? (
+                              <span dir="rtl">{selectedSignal?.reason_ar}</span>
+                            ) : (
+                              selectedSignal?.reason_en
+                            )}
                           </p>
                         </DialogContent>
                       </Dialog>

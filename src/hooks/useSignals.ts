@@ -30,7 +30,7 @@ export function useSignals() {
   useEffect(() => {
     fetchSignals();
     // Refresh every 30 seconds to get updated prices
-    const interval = setInterval(fetchSignals, 30000);
+    const interval = setInterval(fetchSignals, 60000);
     return () => clearInterval(interval);
   }, [fetchSignals]);
 
