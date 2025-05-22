@@ -18,7 +18,7 @@ interface NewsItem {
   symbol: string;
   title_en: string;
   title_ar: string;
-  price: number;
+  //price: number;
   //published_date: string;
 }
 
@@ -108,13 +108,13 @@ export default function NewsFeed({ lang }: LangProps) {
                   <span className="font-bold text-brightTeal">
                     {item.symbol}
                   </span>
-                  <span
+                  {/*   <span
                     className={`font-semibold ${
                       item.price > 0 ? "text-green-600" : "text-red-600"
                     }`}
                   >
                     ${item.price}
-                  </span>
+                  </span> */}
                 </div>
                 <p className="text-gray-700 mb-2">
                   {lang === "ar" ? item.title_ar : item.title_en}
