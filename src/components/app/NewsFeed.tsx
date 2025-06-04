@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { format } from "date-fns";
-//import { ar } from "date-fns/locale";
-import { RefreshCcw, ChevronLeft, ChevronRight } from "lucide-react";
+import { ar } from "date-fns/locale";
+import { RefreshCcw, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "../LoadingSpinner";
-
+import { formatDistanceToNow, format, addHours } from "date-fns";
 interface LangProps {
   lang: "en" | "ar";
 }
@@ -19,7 +18,7 @@ interface NewsItem {
   title_en: string;
   title_ar: string;
   //price: number;
-  //published_date: string;
+  published_date: string;
 }
 
 interface NewsResponse {
@@ -119,15 +118,18 @@ export default function NewsFeed({ lang }: LangProps) {
                 <p className="text-gray-700 mb-2">
                   {lang === "ar" ? item.title_ar : item.title_en}
                 </p>
-                {/*    <div className="flex items-center text-sm text-gray-500">
+                <div className="flex items-center text-sm text-gray-500">
                   <Calendar
                     className={`w-4 h-4 ${lang === "ar" ? "ml-1" : "mr-1"}`}
                   />
-                  {formatDistanceToNow(new Date(item.published_date), {
-                    addSuffix: true,
-                    locale: lang === "ar" ? ar : undefined,
-                  })}
-                </div> */}
+                  {formatDistanceToNow(
+                    addHours(new Date(item.published_date), 3),
+                    {
+                      addSuffix: true,
+                      locale: lang === "ar" ? ar : undefined,
+                    }
+                  )}
+                </div>
               </CardContent>
             </Card>
           </motion.div>
