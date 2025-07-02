@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/en/history`, changefreq: "weekly", priority: 0.6 },
     { url: `${baseUrl}/en/news`, changefreq: "daily", priority: 0.7 },
     { url: `${baseUrl}/en/signals`, changefreq: "daily", priority: 0.7 },
+    { url: `${baseUrl}/en/breakthroughs`, changefreq: "daily", priority: 0.7 },
     { url: `${baseUrl}/en/subscription`, changefreq: "monthly", priority: 0.7 },
     { url: `${baseUrl}/en/auth/login`, priority: 0.5 },
     { url: `${baseUrl}/en/auth/register`, priority: 0.5 },
@@ -37,6 +38,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/ar/history`, changefreq: "weekly", priority: 0.6 },
     { url: `${baseUrl}/ar/news`, changefreq: "daily", priority: 0.7 },
     { url: `${baseUrl}/ar/signals`, changefreq: "daily", priority: 0.7 },
+    { url: `${baseUrl}/ar/breakthroughs`, changefreq: "daily", priority: 0.7 },
+
     { url: `${baseUrl}/ar/subscription`, changefreq: "monthly", priority: 0.7 },
     { url: `${baseUrl}/ar/auth/login`, priority: 0.5 },
     { url: `${baseUrl}/ar/auth/register`, priority: 0.5 },

@@ -1,14 +1,14 @@
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const fetchAll = url.searchParams.get("all") === "true";
     const client = await pool.connect();
-    const query = `
-      SELECT * FROM breakthroughs 
-      ORDER BY created_at DESC 
-      LIMIT 3;
-    `;
+    const query = fetchAll
+      ? `SELECT * FROM breakthroughs ORDER BY created_at DESC;`
+      : `SELECT * FROM breakthroughs ORDER BY created_at DESC LIMIT 3;`;
     const result = await client.query(query);
     client.release();
 

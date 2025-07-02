@@ -25,6 +25,10 @@ const Footer = () => {
         // { href: "/ar/daily-video", label: "الفيديو اليومي" },
         { href: "/ar/signals", label: "الأفكار" },
         { href: "/ar/history", label: "النتائج" },
+        {
+          href: "/ar/breakthroughs",
+          label: "تعيينات هيئة الغذاء والدواء (FDA)",
+        },
         //{ href: "/ar/subscription", label: "الأشتراكات" },
       ]
     : [
@@ -34,6 +38,7 @@ const Footer = () => {
         //  { href: "/en/daily-video", label: "Financial Calendar" },
         { href: "/en/signals", label: "Ideas" },
         { href: "/en/history", label: "History" },
+        { href: "/en/breakthroughs", label: "FDA Designations" },
         //{ href: "/en/subscription", label: "Subscriptions" },
       ];
 
