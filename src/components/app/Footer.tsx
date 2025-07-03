@@ -145,7 +145,7 @@ const Footer = () => {
                 <span className="sr-only">Facebook</span>
               </Button> */}
               <a
-                href="https://x.com/m_almanasrah" // replace with your actual Twitter link
+                href="https://x.com/biopharma_stock" // replace with your actual Twitter link
                 target="_blank"
                 rel="noopener noreferrer"
               >
