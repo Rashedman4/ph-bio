@@ -80,11 +80,11 @@ const translations = {
     breakthroughs: "breakthroughs",
   },
   ar: {
-    pageTitle: "تعيينات هيئة الغذاء والدواء (FDA)",
+    pageTitle: "تصنيفات هيئة الغذاء والدواء (FDA)",
     pageDesc:
-      "استكشف الشركات التي حصلت على تعيينات من هيئة الغذاء والدواء للأدوية والعلاجات والأجهزة المبتكرة ذات التأثير المحتمل على قطاع الرعاية الصحية.",
-    filterTitle: "تصفية الابتكارات",
-    searchPlaceholder: "ابحث في الابتكارات...",
+      "استكشف الشركات التي حصلت على تصنيفات من هيئة الغذاء والدواء للأدوية والعلاجات والأجهزة المبتكرة ذات التأثير المحتمل على قطاع الرعاية الصحية.",
+    filterTitle: "تصفية التصنيفات",
+    searchPlaceholder: "ابحث في التصنيفات...",
     allCategories: "كل الفئات",
     novelDrugs: "أدوية مبتكرة",
     advancedTherapies: "علاجات متقدمة",
@@ -98,7 +98,7 @@ const translations = {
     marketPotential: "إمكانات السوق",
     showing: "عرض",
     of: "من",
-    breakthroughs: "ابتكارات",
+    breakthroughs: "التصنيفات",
   },
 };
 

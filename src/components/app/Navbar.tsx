@@ -56,8 +56,8 @@ export default function Navbar() {
     ? [
         //{ href: "/ar/subscription", label: "الأشتراكات" },
         {
-          href: "/ar/breakthroughs",
-          label: "تعيينات هيئة الغذاء والدواء (FDA)",
+          href: "/ar/fda-designation",
+          label: "تصنيفات هيئة الغذاء والدواء (FDA)",
         },
         { href: "/ar/history", label: "النتائج" },
         { href: "/ar/signals", label: "الأفكار" },
@@ -73,7 +73,7 @@ export default function Navbar() {
         //{ href: "/en/daily-video", label: "Daily Video" },
         { href: "/en/signals", label: "Ideas" },
         { href: "/en/history", label: "History" },
-        { href: "/en/breakthroughs", label: "FDA Designations" },
+        { href: "/en/fda-designation", label: "FDA Designations" },
         //  { href: "/en/subscription", label: "Subscriptions" },
       ];
 
