@@ -123,7 +123,7 @@ const getSignals = unstable_cache(
       } else {
         // Just get the current signals
         const result = await client.query(
-          "SELECT * FROM signals ORDER BY id DESC"
+          "SELECT * FROM signals ORDER BY date_opened DESC"
         );
         signals = result.rows;
       }
