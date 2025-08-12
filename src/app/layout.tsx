@@ -6,6 +6,7 @@ import type React from "react";
 import SessionWrapper from "@/components/sessionWrapper";
 import { Toaster } from "@/components/ui/toaster";
 import PolicyModal from "@/components/app/PolicyModal";
+import Script from "next/script";
 //import WhatsAppButton from "@/components/app/WhatsAppButton";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -163,6 +164,22 @@ export default function RootLayout({
       <body
         className={`${inter.className} dark:bg-gray-900 dark:text-white flex flex-col min-h-screen`}
       >
+        {/* Twitter Pixel Script */}
+        <Script id="twitter-pixel" strategy="afterInteractive">
+          {`!function(e,t,n,s,u,a){
+              e.twq||(s=e.twq=function(){
+                  s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+              },
+              s.version='1.1',
+              s.queue=[],
+              u=t.createElement(n),
+              u.async=!0,
+              u.src='https://static.ads-twitter.com/uwt.js',
+              a=t.getElementsByTagName(n)[0],
+              a.parentNode.insertBefore(u,a))
+          }(window,document,'script');
+          twq('config','pshk2');`}
+        </Script>
         <SessionWrapper>
           <Navbar />
         </SessionWrapper>
