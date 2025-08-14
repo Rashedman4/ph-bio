@@ -33,18 +33,25 @@ export async function POST(request: NextRequest) {
     request.headers.get("x-forwarded-for")?.split(",")[0] ||
     request.headers.get("x-real-ip") ||
     "unknown";
+
   const geo = ip !== "unknown" ? await getGeoData(ip) : null;
+
+  // User-Agent
+  const userAgent = request.headers.get("user-agent") || null;
+
   const client = await pool.connect();
   try {
     const insertQuery = `
-    INSERT INTO path_log (path, user_id, country, region)
-    VALUES ($1, $2, $3, $4)
+    INSERT INTO path_log (path, user_id, country, region,ip,user_agent)
+    VALUES ($1, $2, $3, $4, $5, $6)
   `;
     await client.query(insertQuery, [
       path,
       userId,
       geo?.country_name || null,
       geo?.region || null,
+      ip,
+      userAgent,
     ]);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
