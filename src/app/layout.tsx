@@ -7,6 +7,7 @@ import SessionWrapper from "@/components/sessionWrapper";
 import { Toaster } from "@/components/ui/toaster";
 import PolicyModal from "@/components/app/PolicyModal";
 import Script from "next/script";
+import PageTracker from "@/components/app/PageTracker";
 //import WhatsAppButton from "@/components/app/WhatsAppButton";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -183,6 +184,7 @@ export default function RootLayout({
         <SessionWrapper>
           <Navbar />
         </SessionWrapper>
+        <PageTracker />
         <main className="flex-grow">
           {" "}
           <SessionWrapper>{children}</SessionWrapper>
