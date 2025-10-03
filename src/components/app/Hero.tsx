@@ -45,12 +45,12 @@ export default function Hero({ lang }: LangProps) {
   const t = translations[lang] || translations.en;
   const { status } = useSession();
 
-  const handleScroll = function () {
+  /*   const handleScroll = function () {
     const element = document.getElementById("whyUs");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }; */
   return (
     <motion.section
       initial={{ opacity: 0 }}
