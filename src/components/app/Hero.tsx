@@ -32,7 +32,7 @@ const translations = {
     title: "استثمر بذكاء في الأسهم الدوائية",
     description:
       "استكشف إمكانيات الأسهم الدوائية مع رؤانا المتقدمة وتحليلات الخبراء.",
-    getStarted: "سجل الآن",
+    getStarted: "للتوصيات سجل الآن",
     learnMore: "اعرف المزيد",
     advantages: "مزايا Bio Pharma Stock",
     realTimeAnalysis: "تحليل السوق في الوقت الحقيقي",
@@ -102,14 +102,14 @@ export default function Hero({ lang }: LangProps) {
                   )}
                 </Button>
               </Link>
-              <Button
+              {/* <Button
                 size="lg"
                 variant="outline"
                 className="text-brightTeal border-pureWhite hover:bg-pureWhite hover:text-royalBlue"
                 onClick={handleScroll}
               >
                 {t.learnMore}
-              </Button>
+              </Button> */}
             </motion.div>
           </div>
           <motion.div

@@ -428,7 +428,10 @@ function BreakthroughCard({
           <div className="flex items-center mb-4">
             <Building2 className="mr-1 h-4 w-4 text-gray-500" />
             <span className="text-sm text-gray-600">
-              {breakthrough.company} ({breakthrough.symbol})
+              {breakthrough.company}{" "}
+              <span className="text-md font-bold text-brightTeal">
+                ({breakthrough.symbol})
+              </span>
             </span>
           </div>
 
