@@ -40,12 +40,12 @@ const socialLinks: SocialLink[] = [
   },
   {
     id: "whatsapp-group",
-    name: { en: "WhatsApp group", ar: "قروب واتساب" },
+    name: { en: "WhatsApp group", ar: "جروب واتساب" },
     icon: Users,
     url: "https://t.co/ndtNRpXOq5",
     color: "#128C7E",
     bgGradient: "from-emerald-400 to-emerald-600",
-    buttonText: { en: "Join Group", ar: "انضم للقروب" },
+    buttonText: { en: "Join Group", ar: "انضم للجروب" },
   },
   {
     id: "telegram-channel",
@@ -147,13 +147,13 @@ function HeaderSection({ lang }: LangProps) {
 
       <motion.h2 className="text-3xl md:text-5xl font-bold text-pureWhite mb-6 mt-6">
         {lang === "ar"
-          ? "انضم إلى وسائل الإتصال الخاصة بنا"
+          ? "انضم إلى وسائل التواصل الخاصة بنا"
           : "Join Our Community"}
       </motion.h2>
 
       <motion.p className="text-xl md:text-2xl text-pureWhite/90 max-w-3xl mx-auto mb-8">
         {lang === "ar"
-          ? "تمتع بوصول حصري إلى تحليلات سوق الأدوية، و تنبيهات فورية"
+          ? "تحليلات الأسهم الدوائية و التنبيهات الفورية"
           : "Get exclusive access to pharmaceutical market insights, and real-time alerts"}
       </motion.p>
     </motion.div>
@@ -290,7 +290,7 @@ function FooterCTA({ lang }: LangProps) {
           </h3>
           <p className="text-pureWhite/90 mb-6 text-lg">
             {lang === "ar"
-              ? "سجّل حسابك الآن للوصول إلى إشاراتنا المميزة وتحقيق أفضل الفرص الاستثمارية"
+              ? "سجّل حسابك الآن للوصول الى توصياتنا المميزة وتحقيق أفضل الفرص الاستثمارية"
               : "Sign up now and create your account to access our premium signals and unlock the best opportunities"}
           </p>
           <Link href={`/${lang}/auth/login`}>
