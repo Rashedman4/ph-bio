@@ -102,9 +102,9 @@ const Footer = () => {
           </div>
           <div>
             <h4 className="text-md font-semibold mb-4">
-              {" "}
               {isArabic ? "اتصل بنا" : "Contact Us"}
             </h4>
+
             <p className="text-sm mb-2">
               <a
                 href="mailto:info@biopharmastock.com"
@@ -115,7 +115,8 @@ const Footer = () => {
                   : "Email: info@biopharmastock.com"}
               </a>
             </p>
-            <p className="text-sm">
+
+            <p className="text-sm mb-2">
               {isArabic ? (
                 <>
                   رقم الهاتف:{" "}
@@ -128,6 +129,25 @@ const Footer = () => {
                   Phone: +971 50 936 3328
                 </a>
               )}
+            </p>
+
+            {/* 🌟 Added Community link */}
+            <p className="text-sm mt-3">
+              <Link
+                href={`/${isArabic ? "ar" : "en"}/community`}
+                className="inline-flex items-center text-brightTeal font-semibold transition-colors"
+              >
+                <span className="hover:underline">
+                  {isArabic ? "انضم إلى مجتمعنا" : "Join Our Community"}
+                </span>
+                <span
+                  className={`ml-2 transform transition-transform group-hover:translate-x-1 ${
+                    isArabic ? "rotate-180 mr-2 ml-0" : ""
+                  }`}
+                >
+                  →
+                </span>
+              </Link>
             </p>
           </div>
           <div>
