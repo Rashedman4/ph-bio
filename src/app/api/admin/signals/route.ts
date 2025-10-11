@@ -170,7 +170,7 @@ export async function DELETE(req: NextRequest) {
       const signal = signalResult.rows[0];
       const success = signal.enter_price < signal.price_now ? true : false;
       const historyQuery = `
-      INSERT INTO signal_history (symbol, entrance_date, closing_date, in_price, out_price, success)
+      INSERT INTO signal_history (symbol, entrance_date, closing_date, in_price, out_price, success, reason_en, reason_ar)
       VALUES ($1, $2, CURRENT_DATE, $3, $4, $5);
     `;
       await client.query(historyQuery, [
@@ -179,6 +179,8 @@ export async function DELETE(req: NextRequest) {
         signal.enter_price,
         signal.price_now,
         success,
+        signal.reason_en,
+        signal.reason_ar,
       ]);
     }
     await client.query("DELETE FROM signals WHERE id = $1", [id]);
