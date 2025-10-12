@@ -26,6 +26,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Link href="/admin/breakthroughs" className="hover:text-brightTeal">
               breakthroughs
             </Link>
+            <Link href="/admin/history" className="hover:text-brightTeal">
+              History
+            </Link>
           </div>
         </div>
       </nav>

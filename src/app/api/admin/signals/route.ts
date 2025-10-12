@@ -171,7 +171,7 @@ export async function DELETE(req: NextRequest) {
       const success = signal.enter_price < signal.price_now ? true : false;
       const historyQuery = `
       INSERT INTO signal_history (symbol, entrance_date, closing_date, in_price, out_price, success, reason_en, reason_ar)
-      VALUES ($1, $2, CURRENT_DATE, $3, $4, $5);
+      VALUES ($1, $2, CURRENT_DATE, $3, $4, $5, $6, $7);
     `;
       await client.query(historyQuery, [
         signal.symbol,
