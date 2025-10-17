@@ -10,7 +10,6 @@ async function fetchCurrentPrice(symbol: string) {
       `https://financialmodelingprep.com/api/v3/quote-short/${symbol}?apikey=${process.env.MY_API_KEY}`
     );
     const data = await response.json();
-    console.log(data);
     return data[0].price;
   } catch (error) {
     console.error("Error fetching price:", error);

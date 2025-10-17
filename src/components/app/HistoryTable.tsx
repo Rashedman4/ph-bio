@@ -24,6 +24,10 @@ const formatDate = (dateString: string): string => {
     year: "2-digit",
   });
 };
+const calculateProfit = (inPrice: number, outPrice: number) => {
+  const profit = ((outPrice - inPrice) / inPrice) * 100;
+  return profit.toFixed(2);
+};
 interface LangProps {
   lang: "en" | "ar";
 }
@@ -91,43 +95,63 @@ export default function HistoryTable({ lang }: LangProps) {
                   {lang === "ar" ? "سعر الخروج" : "Out Price"}
                 </TableHead>
                 <TableHead className="text-royalBlue font-semibold text-[10px] sm:text-sm md:text-base text-center px-1 sm:px-4 py-2 sm:py-3">
+                  {lang === "ar" ? "الربح/الخسارة" : "Profit/Loss"}
+                </TableHead>
+                <TableHead className="text-royalBlue font-semibold text-[10px] sm:text-sm md:text-base text-center px-1 sm:px-4 py-2 sm:py-3">
                   {lang === "ar" ? "تاريخ الخروج" : "Closing"}
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <AnimatePresence>
-                {historyData.map((item, index) => (
-                  <motion.tr
-                    key={`${item.symbol}-${item.entrance_date}-${item.id}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className="hover:bg-lightGray transition-colors duration-200 text-center"
-                  >
-                    <TableCell className=" py-2 sm:py-4 px-3 sm:px-4">
-                      <Badge
-                        variant="outline"
-                        className="bg-royalBlue bg-opacity-10 text-royalBlue text-[10px] sm:text-sm md:text-base px-1 sm:px-2 py-0.5 sm:py-1"
-                      >
-                        {item.symbol}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
-                      {formatDate(item.entrance_date)}
-                    </TableCell>
-                    <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
-                      ${item.in_price}
-                    </TableCell>
-                    <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
-                      ${item.out_price}
-                    </TableCell>
-                    <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
-                      {formatDate(item.closing_date)}
-                    </TableCell>
-                  </motion.tr>
-                ))}
+                {historyData.map((item, index) => {
+                  const profitLoss = calculateProfit(
+                    item.in_price,
+                    item.out_price
+                  );
+                  return (
+                    <motion.tr
+                      key={`${item.symbol}-${item.entrance_date}-${item.id}`}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      className="hover:bg-lightGray transition-colors duration-200 text-center"
+                    >
+                      <TableCell className=" py-2 sm:py-4 px-3 sm:px-4">
+                        <Badge
+                          variant="outline"
+                          className="bg-royalBlue bg-opacity-10 text-royalBlue text-[10px] sm:text-sm md:text-base px-1 sm:px-2 py-0.5 sm:py-1"
+                        >
+                          {item.symbol}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
+                        {formatDate(item.entrance_date)}
+                      </TableCell>
+                      <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
+                        ${item.in_price}
+                      </TableCell>
+                      <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
+                        ${item.out_price}
+                      </TableCell>
+                      <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
+                        <span
+                          className={
+                            Number.parseFloat(profitLoss) >= 0
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }
+                        >
+                          {profitLoss}%
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-[10px] sm:text-sm md:text-base  py-2 sm:py-4 px-1 sm:px-4">
+                        {formatDate(item.closing_date)}
+                      </TableCell>
+                    </motion.tr>
+                  );
+                })}
               </AnimatePresence>
             </TableBody>
           </Table>

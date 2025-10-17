@@ -52,8 +52,8 @@ async function updateSignalPrices() {
             // Close the signal if first target is reached
             const success = signal.enter_price < currentPrice;
             const historyQuery = `
-              INSERT INTO signal_history (symbol, entrance_date, closing_date, in_price, out_price, success)
-              VALUES ($1, $2, CURRENT_DATE, $3, $4, $5);
+              INSERT INTO signal_history (symbol, entrance_date, closing_date, in_price, out_price, success,reason_en,reason_ar)
+              VALUES ($1, $2, CURRENT_DATE, $3, $4, $5, $6, $7);
             `;
             await client.query(historyQuery, [
               signal.symbol,
@@ -61,6 +61,8 @@ async function updateSignalPrices() {
               signal.enter_price,
               currentPrice,
               success,
+              signal.reason_en,
+              signal.reason_ar,
             ]);
 
             // Delete the signal
